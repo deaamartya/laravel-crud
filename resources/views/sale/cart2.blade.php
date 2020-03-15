@@ -2,7 +2,10 @@
 @section('tambahlink')
   <link href="/admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/4.2.5/jquery.bootstrap-touchspin.min.css">
+  
 @endsection
 @section('tmbhstyle')
 <style type="text/css">
@@ -75,9 +78,9 @@
               </tbody>
           </table>
         </div>
-          <h6 style="text-align: right;">Sub Total : Rp. <input class="money" type="text" id="subtotal" style="text-align: right; border: 0px;"></h6>
-          <h6 style="text-align: right;">Discount : Rp.(<input class="money" type="text" id="total_discount" style="text-align: right; border: 0px;">)</h6>
-          <h6 style="text-align: right;">Total Payment : Rp. <input class="money" type="text" name="total_payment" id="total_payment" style="text-align: right; border: 0px;"></h6>
+          <h6 style="text-align: right;">Sub Total : Rp. <input type="text" id="subtotal" style="text-align: right; border: 0px;"></h6>
+          <h6 style="text-align: right;">Discount : Rp.(<input type="text" id="total_discount" style="text-align: right; border: 0px;">)</h6>
+          <h6 style="text-align: right;">Total Payment : Rp. <input type="text" name="total_payment" id="total_payment" style="text-align: right; border: 0px;"></h6>
           <input type="submit" class="btn btn-info btn-lg align-self-end" value="Submit">
           </form>
         </div>
@@ -100,7 +103,7 @@
           <table class="table table-hover" id="tabelproduk" width="100%">
           <thead>
             <tr>
-              <th scope="col"></th>
+              <th scope="col">Pilih Produk</th>
               <th scope="col">Nama Produk</th>
               <th scope="col">Harga</th>
               <th scope="col">Stok</th>
@@ -109,10 +112,26 @@
           <tbody>
             @foreach($product as $p)
             <tr id="{{$p -> product_id}}">
-              <td><input type="checkbox" id="check{{$p-> product_id}}" class="productcheck"></td>
-              <td>{{ $p-> product_name }}</td>
-              <td>Rp. <span class="money">{{ $p-> product_price }}</span></td>
-              <td>{{ $p-> product_stock }}</td>
+              <td class="align-middle">
+                <div class="mdc-checkbox">
+                  <input type="checkbox"
+                         class="mdc-checkbox__native-control productcheck"
+                         id="check{{$p-> product_id}}"/>
+                  <div class="mdc-checkbox__background">
+                    <svg class="mdc-checkbox__checkmark"
+                         viewBox="0 0 24 24">
+                      <path class="mdc-checkbox__checkmark-path"
+                            fill="none"
+                            d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                    </svg>
+                    <div class="mdc-checkbox__mixedmark"></div>
+                  </div>
+                  <div class="mdc-checkbox__ripple"></div>
+                </div>
+              </td>
+              <td class="align-middle">{{ $p-> product_name }}</td>
+              <td class="align-middle">Rp. {{ $p-> product_price }}</td>
+              <td class="align-middle">{{ $p-> product_stock }}</td>
             </tr>
             @endforeach
           </tbody>
@@ -124,83 +143,80 @@
         <button type="button" class="btn btn-primary" id="save">Add to Cart</button>
       </div>
     </div>
-  </div>o
+  </div>
 </div>
 @endsection
 @section('tambahan')
 <script src="/admin/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-<script src="/js/simple.money.format.js"></script>
-<script type="text/javascript">
-    var products = <?php echo json_encode($product); ?>;
-    $('#tabelproduk').DataTable();
-    $('.money').simpleMoneyFormat();
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1;
-    var yyyy = today.getFullYear();
-    if(dd<10){
-        dd='0'+dd
-    } 
-    if(mm<10){
-        mm='0'+mm
-    } 
-    today = yyyy+'-'+mm+'-'+dd;
-    document.getElementById("nota_date").setAttribute("max", today);
-    document.getElementById("nota_date").value = today;
+<script src="/js/hitung.js"></script>
+<script src="/js/bootstrap-input-spinner.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/4.2.5/jquery.bootstrap-touchspin.min.js"></script> -->
+<script>
+        var products = <?php echo json_encode($product); ?>;
+        
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1;
+        var yyyy = today.getFullYear();
+        if(dd<10){
+            dd='0'+dd
+        } 
+        if(mm<10){
+            mm='0'+mm
+        } 
+        today = yyyy+'-'+mm+'-'+dd;
+        document.getElementById("nota_date").setAttribute("max", today);
+        document.getElementById("nota_date").value = today;
     
-    function getTotal(){
-      var totals = document.getElementsByClassName("total");
-
-      var i;
-      var total_p = 0;
-      for (i = 0; i < totals.length; ++i) {
-        total_p = total_p + Number(totals[i].value);
-      }
-      document.getElementById('subtotal').value = total_p;
-
-      var discounts = document.getElementsByClassName("discount");
-
-      var i;
-      var total_disc = 0;
-      for (i = 0; i < discounts.length; ++i) {
-        total_disc = total_disc + Number(discounts[i].value);
-      }
-      document.getElementById('total_discount').value = total_disc;
-
-      document.getElementById('total_payment').value = total_p - total_disc;
-    }
-
-    function percentDisc(id){
-      var percent = document.getElementById("percent"+id).value;
-      var total = document.getElementById("total"+id).value;
-      var hasil = (Number(percent)/100) * total;
-      document.getElementById("discount"+id).value = hasil;
-      getTotal();
-    }
-
-    function recount(id) {
-      var jumlah = document.getElementById("jumlah"+id).value;
-      var price = document.getElementById("price"+id).value;
-      var subtotal = (jumlah*price);
-      document.getElementById("discount"+id).setAttribute("max", subtotal);
-      
-      var total = (jumlah * price);
-      document.getElementById("total"+id).value = total;
-      document.getElementById("totaltext"+id).innerHTML = total;
-      percentDisc(id);
-    }
-
-    function delRow(id){
+        function delRow(id){
           $('#cart tbody tr#'+id).remove();
           getTotal();
           $("#tabelproduk tbody tr#"+id).show();
         }
-    
 
-    $(document).ready(function(){
+        function inc(id){
+          var oldValue = $("#jumlah"+id).val();
+          var newVal = parseFloat(oldValue)+1;
+          $("#jumlah"+id).val(newVal);
+          recount(id);
+        }
+
+        function dec(id){
+          var oldValue = $("#jumlah"+id).val();
+          if (parseFloat(oldValue) > 1) {
+              var newVal = parseFloat(oldValue)-1;
+              $("#jumlah"+id).val(newVal);
+          }
+          recount(id);
+        }
+
+      jQuery( function( $ ) {
+
+        $(".qButton").click(function(){
+
+          var $button = $(this);
+          var oldValue = $button.parent().find(".quantity").val();
+          console.log(oldValue);
+          if ($button.text() == "+") {
+            var newVal = parseFloat(oldValue) + 1;
+          } else {
+           // Don't allow decrementing below zero
+            if (oldValue > 0) {
+              var newVal = parseFloat(oldValue) - 1;
+            } else {
+              newVal = 0;
+            }
+          }
+
+          $button.parent().find(".quantity").val(newVal);
+
+          console.log(newVal);
+
+        });
+
         $("#save").click(function(){
-          var checks = $('input[type=checkbox]:checked');
+          var checks = $("#tabelproduk").find("input[type=checkbox]:checked");
           var ids = Array();
           for(var i=0;i<checks.length;i++) {
               ids[i] = checks[i].id;
@@ -221,6 +237,8 @@
             }
         });
 
+        
+
          function addRow(id){
             var index = getIndex(id);
             var id = products[index]["product_id"];
@@ -229,31 +247,35 @@
             var stock = products[index]["product_stock"];
             var markup = "\
             <tr id='"+id+"'>\
-                <td style='text-align: left; padding-left: 50px;' class='align-middle'>\
+              <td style='text-align: left; padding-left: 50px;' class='align-middle'>\
                 <div class='row'>\
                   <h6 class='product_name'>"+name+"</div>\
                 <div class='row'>\
-                <input type='hidden' name='product_id["+id+"]' value='#"+id+"' readonly id='product_id"+id+"'>#"+id+"</div>\
+                  <input type='hidden' name='product_id["+id+"]' value="+id+" readonly id='product_id"+id+"'>#"+id+"</div>\
               </td>\
-              <td style='width: 10%;' class='align-middle'>\
-              <input type='number' style='width: 100%; border:0px;' class='money' oninput='recount("+id+")' name='quantity["+id+"]' min='1' id='jumlah"+id+"'required max='"+stock+"' value='1'>\
+              <td style='width: 20%;' class='align-middle'>\
+                <div class='row'>\
+                <div class='col-12'>\
+                <button class='inc btn btn-sm btn-dark' type='button' onclick='inc("+id+")'>+</button>\
+                <input type='number' style='-moz-appearance: textfield; width: 30%; border:1px;text-align: center;' class='quantity' oninput='recount("+id+")' name='jumlah["+id+"]' min='1' id='jumlah"+id+"'required max='"+stock+"' value='1'>\
+                <button class='dec btn btn-sm btn-dark' type='button' onclick='dec("+id+")'>-</button></div></div>\
               </td>\
               <td style='text-align: right; width:30%;' class='align-middle'>\
                 <div class='row'>\
-                  <input type='hidden' class='money' name='selling_price["+id+"]' min='1' id='price"+id+"'required value='"+price+"' readonly>@ Rp. <h6 class='money'>"+price+"\
-                  </div>\
-                  <div class='row align-items-left'>\
+                  <input type='hidden' class='selling_price' name='selling_price["+id+"]' min='1' id='price"+id+"'required value='"+price+"' readonly>@ Rp. "+price+"\
+                </div>\
+                <div class='row'>\
                   <div class='col-3'>Disc. </div>\
                   <div class='col-4'>\
                     <input type='number' min='0' max='100' oninput='percentDisc("+id+")' class='percent' name='percent["+id+"]' id='percent"+id+"' placeholder='0' style='-moz-appearance: textfield; text-align:right; width:100%;'>\
                     <input type='hidden' min='0' oninput='recount("+id+")' class='discount' name='discount["+id+"]' id='discount"+id+"' placeholder='0' style='-moz-appearance: textfield; text-align:right;'>\
                   </div>\
                   <div class='col-1' style='text-align: left;'>%</div>\
-                  </div>\
+                </div>\
               </td>\
               <td style='text-align: right;' class='align-middle'>\
               <div class='row'>\
-              <input type='hidden' class='total' name='total["+id+"]' min='1' id='total"+id+"' required readonly value='0'>Rp. <h6 class='money' id='totaltext"+id+"'></div>\
+              <input type='hidden' class='total' name='total["+id+"]' min='1' id='total"+id+"' required readonly value='0'>Rp. <h6 id='totaltext"+id+"'></div>\
               </td>\
               <td style='width: 5%;' class='align-middle'>\
               <i class='material-icons' onclick='delRow("+id+")' style='cursor: pointer;'>clear</i>\
@@ -261,34 +283,19 @@
             </tr>";
           $("#cart tbody").append(markup);
           recount(id);
+          
          }
 
-         
-      });
-
-      function getIndex(id){
-        for(var i = 0;i<products.length;i++){
-          if(products[i]["product_id"] == id){
-              var index = i;
-              return index;
+         function getIndex(id){
+            for(var i = 0;i<products.length;i++){
+              if(products[i]["product_id"] == id){
+                  var index = i;
+                  return index;
+              }
+            }
           }
-        }
-      }
 
-
-        
-    
-  //     $('#tabelproduk').dataTable( {
-  //   "columns": [
-  //     { "width": "5%" },
-  //     { "width": "5%" },
-  //     { "width": "30%" },
-  //     { "width": "5%" },
-  //     { "width": "25%" },
-  //     { "width": "10%" },
-  //     { "width": "20%" }
-  //   ]
-  // });  
+      });
+        $('#tabelproduk').DataTable();
 </script>
-
 @endsection
