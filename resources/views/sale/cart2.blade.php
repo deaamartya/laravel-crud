@@ -75,9 +75,9 @@
               </tbody>
           </table>
         </div>
-          <h6 style="text-align: right;">Sub Total : Rp. <input type="text" id="subtotal" style="text-align: right; border: 0px;"></h6>
-          <h6 style="text-align: right;">Discount : Rp.(<input type="text" id="total_discount" style="text-align: right; border: 0px;">)</h6>
-          <h6 style="text-align: right;">Total Payment : Rp. <input type="text" name="total_payment" id="total_payment" style="text-align: right; border: 0px;"></h6>
+          <h6 style="text-align: right;">Sub Total : Rp. <input class="money" type="text" id="subtotal" style="text-align: right; border: 0px;"></h6>
+          <h6 style="text-align: right;">Discount : Rp.(<input class="money" type="text" id="total_discount" style="text-align: right; border: 0px;">)</h6>
+          <h6 style="text-align: right;">Total Payment : Rp. <input class="money" type="text" name="total_payment" id="total_payment" style="text-align: right; border: 0px;"></h6>
           <input type="submit" class="btn btn-info btn-lg align-self-end" value="Submit">
           </form>
         </div>
@@ -111,7 +111,7 @@
             <tr id="{{$p -> product_id}}">
               <td><input type="checkbox" id="check{{$p-> product_id}}" class="productcheck"></td>
               <td>{{ $p-> product_name }}</td>
-              <td>Rp. {{ $p-> product_price }}</td>
+              <td>Rp. <span class="money">{{ $p-> product_price }}</span></td>
               <td>{{ $p-> product_stock }}</td>
             </tr>
             @endforeach
@@ -130,10 +130,11 @@
 @section('tambahan')
 <script src="/admin/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="/js/simple.money.format.js"></script>
 <script type="text/javascript">
     var products = <?php echo json_encode($product); ?>;
     $('#tabelproduk').DataTable();
-    
+    $('.money').simpleMoneyFormat();
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth()+1;
@@ -235,11 +236,11 @@
                 <input type='hidden' name='product_id["+id+"]' value='#"+id+"' readonly id='product_id"+id+"'>#"+id+"</div>\
               </td>\
               <td style='width: 10%;' class='align-middle'>\
-              <input type='number' style='width: 100%; border:0px;' class='quantity' oninput='recount("+id+")' name='quantity["+id+"]' min='1' id='jumlah"+id+"'required max='"+stock+"' value='1'>\
+              <input type='number' style='width: 100%; border:0px;' class='money' oninput='recount("+id+")' name='quantity["+id+"]' min='1' id='jumlah"+id+"'required max='"+stock+"' value='1'>\
               </td>\
               <td style='text-align: right; width:30%;' class='align-middle'>\
                 <div class='row'>\
-                  <input type='hidden' class='selling_price' name='selling_price["+id+"]' min='1' id='price"+id+"'required value='"+price+"' readonly>@ Rp. "+price+"\
+                  <input type='hidden' class='money' name='selling_price["+id+"]' min='1' id='price"+id+"'required value='"+price+"' readonly>@ Rp. <h6 class='money'>"+price+"\
                   </div>\
                   <div class='row align-items-left'>\
                   <div class='col-3'>Disc. </div>\
@@ -252,7 +253,7 @@
               </td>\
               <td style='text-align: right;' class='align-middle'>\
               <div class='row'>\
-              <input type='hidden' class='total' name='total["+id+"]' min='1' id='total"+id+"' required readonly value='0'>Rp. <h6 id='totaltext"+id+"'></div>\
+              <input type='hidden' class='total' name='total["+id+"]' min='1' id='total"+id+"' required readonly value='0'>Rp. <h6 class='money' id='totaltext"+id+"'></div>\
               </td>\
               <td style='width: 5%;' class='align-middle'>\
               <i class='material-icons' onclick='delRow("+id+")' style='cursor: pointer;'>clear</i>\
