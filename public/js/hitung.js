@@ -8,6 +8,7 @@
         total_p = total_p + Number(totals[i].value);
       }
       document.getElementById('subtotal').value = total_p;
+      document.getElementById('subtotal-val').innerHTML = money(total_p);
 
       var discounts = document.getElementsByClassName("discount");
 
@@ -16,9 +17,11 @@
       for (i = 0; i < discounts.length; ++i) {
         total_disc = total_disc + Number(discounts[i].value);
       }
-      document.getElementById('total_discount').value = total_disc;
 
-      document.getElementById('total_payment').value = total_p - total_disc;
+      document.getElementById('total_discount').value = total_disc;
+      document.getElementById('total_discount-val').innerHTML = money(total_disc);
+      document.getElementById('total_payment-val').innerHTML = money(total_p-total_disc);
+      document.getElementById('total_payment').value = money(total_p-total_disc);
     };
 
     function percentDisc(id){
@@ -38,7 +41,8 @@
       document.getElementById("discount"+id).setAttribute("max", subtotal);
       
       var total = (jumlah * price);
+      
       document.getElementById("total"+id).value = total;
-      document.getElementById("totaltext"+id).innerHTML = total;
+      document.getElementById("total-val"+id).innerHTML = money(total);
       percentDisc(id);
     };

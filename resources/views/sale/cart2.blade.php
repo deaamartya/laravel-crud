@@ -72,15 +72,42 @@
             <button type="button" class="add-row btn btn-primary" style="padding: 10px 15px 10px 15px;" data-toggle="modal" data-target="#pilihanProduct">Tambahkan produk</button>
             </div>
           </div>
-          <div class="table-responsive">
-          <table class="table" id="cart" width="100%" cellspacing="0" align="right">
-              <tbody>
-              </tbody>
+          
+          <table class="table" id="cart" width="100%" cellspacing="0">
+            <tbody>
+            </tbody>
           </table>
-        </div>
-          <h6 style="text-align: right;">Sub Total : Rp. <input type="text" id="subtotal" style="text-align: right; border: 0px;"></h6>
-          <h6 style="text-align: right;">Discount : Rp.(<input type="text" id="total_discount" style="text-align: right; border: 0px;">)</h6>
-          <h6 style="text-align: right;">Total Payment : Rp. <input type="text" name="total_payment" id="total_payment" style="text-align: right; border: 0px;"></h6>
+          
+
+            <div class="row align-baseline">
+              <div class="col-9">
+                <h6 style="text-align: right; margin-left: 20px;">Sub Total : Rp. </h6>
+                <input type="hidden" id="subtotal">
+              </div>
+              <div class="col-3">
+                <h6 style="text-align: right; margin-left: 20px; margin-right: 80px;" id="subtotal-val">0</h6>
+              </div>
+            </div>
+
+            <div class="row align-baseline">
+              <div class="col-9">
+                <h6 style="text-align: right; margin-left: 20px;">Discount : Rp.</h6>
+                <input type="hidden" id="total_discount">
+              </div>
+              <div class="col-3">
+                <h6 style="text-align: right; margin-left: 20px; margin-right: 80px;" id="total_discount-val">0</h6>
+              </div>
+            </div>
+
+            <div class="row align-baseline">
+              <div class="col-9">
+              <h6 style="text-align: right; margin-left: 20px;">Total Payment : Rp. </h6>
+              <input type="hidden" name="total_payment" id="total_payment">
+              </div>
+              <div class="col-3">
+                <h6 id="total_payment-val" style="text-align: right; margin-right: 80px;">0</h6>
+              </div>
+            </div>
           <input type="submit" class="btn btn-info btn-lg align-self-end" value="Submit">
           </form>
         </div>
@@ -93,7 +120,6 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -103,7 +129,7 @@
           <table class="table table-hover" id="tabelproduk" width="100%">
           <thead>
             <tr>
-              <th scope="col">Pilih Produk</th>
+              <th></th>
               <th scope="col">Nama Produk</th>
               <th scope="col">Harga</th>
               <th scope="col">Stok</th>
@@ -112,7 +138,7 @@
           <tbody>
             @foreach($product as $p)
             <tr id="{{$p -> product_id}}">
-              <td class="align-middle">
+              <td class="align-middle no-sort" width="10%">
                 <div class="mdc-checkbox">
                   <input type="checkbox"
                          class="mdc-checkbox__native-control productcheck"
@@ -129,9 +155,11 @@
                   <div class="mdc-checkbox__ripple"></div>
                 </div>
               </td>
-              <td class="align-middle">{{ $p-> product_name }}</td>
-              <td class="align-middle">Rp. {{ $p-> product_price }}</td>
-              <td class="align-middle">{{ $p-> product_stock }}</td>
+              <td class="align-middle" width="50%">{{ $p-> product_name }}</td>
+              <td class="align-middle" width="30%">
+                Rp. {{ $p-> product_price }}
+              </td>
+              <td class="align-middle" width="10%">{{ $p-> product_stock }}</td>
             </tr>
             @endforeach
           </tbody>
@@ -150,11 +178,13 @@
 <script src="/admin/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 <script src="/js/hitung.js"></script>
-<script src="/js/bootstrap-input-spinner.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/4.2.5/jquery.bootstrap-touchspin.min.js"></script> -->
+<script src="/js/add-del-row.js"></script>
 <script>
         var products = <?php echo json_encode($product); ?>;
-        
+        $('#tabelproduk').DataTable( {
+            select: true
+        } );
+
         var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth()+1;
@@ -169,12 +199,6 @@
         document.getElementById("nota_date").setAttribute("max", today);
         document.getElementById("nota_date").value = today;
     
-        function delRow(id){
-          $('#cart tbody tr#'+id).remove();
-          getTotal();
-          $("#tabelproduk tbody tr#"+id).show();
-        }
-
         function inc(id){
           var oldValue = $("#jumlah"+id).val();
           var newVal = parseFloat(oldValue)+1;
@@ -192,28 +216,6 @@
         }
 
       jQuery( function( $ ) {
-
-        $(".qButton").click(function(){
-
-          var $button = $(this);
-          var oldValue = $button.parent().find(".quantity").val();
-          console.log(oldValue);
-          if ($button.text() == "+") {
-            var newVal = parseFloat(oldValue) + 1;
-          } else {
-           // Don't allow decrementing below zero
-            if (oldValue > 0) {
-              var newVal = parseFloat(oldValue) - 1;
-            } else {
-              newVal = 0;
-            }
-          }
-
-          $button.parent().find(".quantity").val(newVal);
-
-          console.log(newVal);
-
-        });
 
         $("#save").click(function(){
           var checks = $("#tabelproduk").find("input[type=checkbox]:checked");
@@ -236,66 +238,6 @@
               check.prop("checked", true);
             }
         });
-
-        
-
-         function addRow(id){
-            var index = getIndex(id);
-            var id = products[index]["product_id"];
-            var name = products[index]["product_name"];
-            var price = products[index]["product_price"];
-            var stock = products[index]["product_stock"];
-            var markup = "\
-            <tr id='"+id+"'>\
-              <td style='text-align: left; padding-left: 50px;' class='align-middle'>\
-                <div class='row'>\
-                  <h6 class='product_name'>"+name+"</div>\
-                <div class='row'>\
-                  <input type='hidden' name='product_id["+id+"]' value="+id+" readonly id='product_id"+id+"'>#"+id+"</div>\
-              </td>\
-              <td style='width: 20%;' class='align-middle'>\
-                <div class='row'>\
-                <div class='col-12'>\
-                <button class='inc btn btn-sm btn-dark' type='button' onclick='inc("+id+")'>+</button>\
-                <input type='number' style='-moz-appearance: textfield; width: 30%; border:1px;text-align: center;' class='quantity' oninput='recount("+id+")' name='jumlah["+id+"]' min='1' id='jumlah"+id+"'required max='"+stock+"' value='1'>\
-                <button class='dec btn btn-sm btn-dark' type='button' onclick='dec("+id+")'>-</button></div></div>\
-              </td>\
-              <td style='text-align: right; width:30%;' class='align-middle'>\
-                <div class='row'>\
-                  <input type='hidden' class='selling_price' name='selling_price["+id+"]' min='1' id='price"+id+"'required value='"+price+"' readonly>@ Rp. "+price+"\
-                </div>\
-                <div class='row'>\
-                  <div class='col-3'>Disc. </div>\
-                  <div class='col-4'>\
-                    <input type='number' min='0' max='100' oninput='percentDisc("+id+")' class='percent' name='percent["+id+"]' id='percent"+id+"' placeholder='0' style='-moz-appearance: textfield; text-align:right; width:100%;'>\
-                    <input type='hidden' min='0' oninput='recount("+id+")' class='discount' name='discount["+id+"]' id='discount"+id+"' placeholder='0' style='-moz-appearance: textfield; text-align:right;'>\
-                  </div>\
-                  <div class='col-1' style='text-align: left;'>%</div>\
-                </div>\
-              </td>\
-              <td style='text-align: right;' class='align-middle'>\
-              <div class='row'>\
-              <input type='hidden' class='total' name='total["+id+"]' min='1' id='total"+id+"' required readonly value='0'>Rp. <h6 id='totaltext"+id+"'></div>\
-              </td>\
-              <td style='width: 5%;' class='align-middle'>\
-              <i class='material-icons' onclick='delRow("+id+")' style='cursor: pointer;'>clear</i>\
-              </td>\
-            </tr>";
-          $("#cart tbody").append(markup);
-          recount(id);
-          
-         }
-
-         function getIndex(id){
-            for(var i = 0;i<products.length;i++){
-              if(products[i]["product_id"] == id){
-                  var index = i;
-                  return index;
-              }
-            }
-          }
-
       });
-        $('#tabelproduk').DataTable();
 </script>
 @endsection
