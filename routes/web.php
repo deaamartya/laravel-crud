@@ -1,6 +1,6 @@
 <?php
 Route::get('/',function(){
-	return view('home');
+	return view('dashboard');
 });
 Route::resource('categories', 'CategoryController');
 Route::resource('customer', 'CustomerController');
