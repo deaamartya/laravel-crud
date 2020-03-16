@@ -25,35 +25,31 @@ function addRow(id){
 	    	<button class='inc btn btn-sm btn-dark' type='button' onclick='inc("+id+")'>+</button>\
 	    	<input type='number' style='-moz-appearance: textfield; width: 30%; border:1px;text-align: center;' class='quantity' oninput='recount("+id+")' name='jumlah["+id+"]' min='1' id='jumlah"+id+"'required max='"+stock+"' value='1'>\
 	    	<button class='dec btn btn-sm btn-dark' type='button' onclick='dec("+id+")'>-</button>\
-	    	</div>\
+	    </div>\
 	  </td>\
 	  \
-	  <td style='text-align: right; width:15%;' class='align-middle'>\
+	  <td style='text-align: right; width:20%;' class='align-middle'>\
 	    <div class='row'>\
 	      <input type='hidden' class='selling_price' name='selling_price["+id+"]' id='price"+id+"' value='"+price+"'>\
 	      @ Rp."+"  "+mprice+"\
 	    </div>\
 	    <div class='row align-text-bottom'>\
-	      <div class='col-4 pl-0 pt-1 align-middle'>\
-	      	<h6 style='text-align: left;'>Disc. </h6>\
-	      </div>\
+	      <div class='col-4 pl-0 pt-1 align-middle'><h6 style='text-align: left;'>Disc. </h6></div>\
 	      <div class='col-6 px-0'>\
 	        <input type='number' min='0' max='100' oninput='percentDisc("+id+")' class='percent' name='percent["+id+"]' id='percent"+id+"' placeholder='0' style='-moz-appearance: textfield; text-align:right; width:100%;'>\
 	        <input type='hidden' min='0' oninput='recount("+id+")' class='discount' name='discount["+id+"]' id='discount"+id+"' placeholder='0' style='-moz-appearance: textfield; text-align:right;'>\
 	      </div>\
-	      <div class='col-2' style='text-align: left;'>\
-	      	%\
-	      </div>\
+	      <div class='col-2' style='text-align: left;'>%</div>\
 	    </div>\
 	  </td>\
 	  \
 	  <td class='align-middle' style='width: 25%;'>\
 		  <div class='row align-middle'>\
 		  	<input type='hidden' class='total' name='total["+id+"]' min='1' id='total"+id+"' required>\
-		  	<div class='col-3'>\
-		  		<h6 style='text-align: left; margin-left:10px;'>Rp.  </h6>\
+		  	<div class='col-4 pl-4'>\
+		  		<h6 style='text-align: left;'>Rp.  </h6>\
 		  	</div>\
-		  	<div class='col-9' >\
+		  	<div class='col-8' >\
 	      		<h6 style='text-align: right; padding-right: 18px;' id='total-val"+id+"'>{{ $p-> product_price }}</h6>\
 	      	</div>\
 		  </div>\

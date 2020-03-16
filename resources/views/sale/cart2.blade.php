@@ -69,7 +69,7 @@
           <h6>Nama Produk</h6>
           <div class="row" style="margin-bottom: 20px">
             <div class="col-12">
-            <button type="button" class="add-row btn btn-primary" style="padding: 10px 15px 10px 15px;" data-toggle="modal" data-target="#pilihanProduct">Tambahkan produk</button>
+            <button type="button" class="add-row btn" style="color: white;padding: 10px 15px 10px 15px;background-color: #FF9190;" data-toggle="modal" data-target="#pilihanProduct"><b>Tambah Produk</b></button>
             </div>
           </div>
           
@@ -77,37 +77,45 @@
             <tbody>
             </tbody>
           </table>
-          
+          <div class="row justify-content-end">
+            <div class="col-6">
+            <div class="card" style="background-color: #E06C78; border: 0px; color: white;">
+              <div class="card-body">
+                  <div class="row align-baseline">
+                    <div class="col-9">
+                      <h6 style="text-align: left; ">Sub Total : Rp. </h6>
+                      <input type="hidden" id="subtotal">
+                    </div>
+                    <div class="col-3">
+                      <h6 style="text-align: right;" id="subtotal-val">0</h6>
+                    </div>
+                  </div>
 
-            <div class="row align-baseline">
-              <div class="col-9">
-                <h6 style="text-align: right; margin-left: 20px;">Sub Total : Rp. </h6>
-                <input type="hidden" id="subtotal">
-              </div>
-              <div class="col-3">
-                <h6 style="text-align: right; margin-left: 20px; margin-right: 80px;" id="subtotal-val">0</h6>
+                  <div class="row align-baseline">
+                    <div class="col-9">
+                      <h6 style="text-align: left;">Discount : Rp.</h6>
+                      <input type="hidden" id="total_discount">
+                    </div>
+                    <div class="col-3">
+                      <h6 style="text-align: right;" id="total_discount-val">0</h6>
+                    </div>
+                  </div>
+
+                  <div class="row align-baseline">
+                    <div class="col-9">
+                    <h6 style="text-align: left; font-size: 14pt;"><b>Total Payment : Rp. </b></h6>
+                    <input type="hidden" name="total_payment" id="total_payment">
+                    </div>
+                    <div class="col-3">
+                      <b><h6 id="total_payment-val" style="text-align: right; font-size: 14pt;">0</h6></b>
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </div>
+          </div>
 
-            <div class="row align-baseline">
-              <div class="col-9">
-                <h6 style="text-align: right; margin-left: 20px;">Discount : Rp.</h6>
-                <input type="hidden" id="total_discount">
-              </div>
-              <div class="col-3">
-                <h6 style="text-align: right; margin-left: 20px; margin-right: 80px;" id="total_discount-val">0</h6>
-              </div>
-            </div>
-
-            <div class="row align-baseline">
-              <div class="col-9">
-              <h6 style="text-align: right; margin-left: 20px;">Total Payment : Rp. </h6>
-              <input type="hidden" name="total_payment" id="total_payment">
-              </div>
-              <div class="col-3">
-                <h6 id="total_payment-val" style="text-align: right; margin-right: 80px;">0</h6>
-              </div>
-            </div>
           <input type="submit" class="btn btn-info btn-lg align-self-end" value="Submit">
           </form>
         </div>
@@ -167,8 +175,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="save">Add to Cart</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary btn-lg" id="save">Add to Cart</button>
       </div>
     </div>
   </div>
