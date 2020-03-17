@@ -1,7 +1,7 @@
 @extends('master')
 @section('headlink')
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="/materialdesign/material-components-web.min.css">
+<link rel="stylesheet" href="{{ asset('/materialdesign/material-components-web.min.css')}}">
 <style type="text/css">
 	@use "@material/textfield/mdc-text-field";
 </style>

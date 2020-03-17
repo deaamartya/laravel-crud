@@ -1,7 +1,8 @@
 <?php
 Route::get('/',function(){
-	return view('dashboard');
+	return view('master');
 });
+
 Route::resource('categories', 'CategoryController');
 Route::resource('customer', 'CustomerController');
 Route::resource('product', 'ProductController');

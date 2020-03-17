@@ -3,8 +3,8 @@
 <head>
 	<title>@yield('Judul')</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link href="/admin/css/sb-admin-2.min.css" rel="stylesheet">
-	<link href="/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+	<link href="{{ asset('/admin/css/sb-admin-2.min.css')}}" rel="stylesheet">
+	<link href="{{ asset('/admin/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   <style type="text/css">
     body {
@@ -36,7 +36,7 @@
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/')}}">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
@@ -46,7 +46,7 @@
       <hr class="sidebar-divider my-0">
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
-        <a class="nav-link" href="/">
+        <a class="nav-link" href="{{ url('/')}}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -68,9 +68,9 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" href="{{ route('categories.index') }}">Category</a>
-            <a class="collapse-item" href="/product">Products</a>
-            <a class="collapse-item" href="/user">User</a>
-            <a class="collapse-item" href="/customer">Customer</a>
+            <a class="collapse-item" href="{{ url('product') }}">Products</a>
+            <a class="collapse-item" href="{{ url('user') }}">User</a>
+            <a class="collapse-item" href="{{ url('customer') }}">Customer</a>
           </div>
         </div>
       </li>
@@ -83,8 +83,8 @@
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="/sale">Sales</a>
-            <a class="collapse-item" href="/saledet">Sales Detail</a>
+            <a class="collapse-item" href="{{url('sale')}}">Sales</a>
+            <a class="collapse-item" href="{{url('saledet')}}">Sales Detail</a>
           </div>
         </div>
       </li>
@@ -307,9 +307,9 @@
 
   </div>
 </body>
-  <script src="/admin/vendor/jquery/jquery.min.js"></script>
-  <script src="/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/admin/vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="/admin/js/sb-admin-2.min.js"></script>
+  <script src="{{ asset('/admin/vendor/jquery/jquery.min.js')}}"></script>
+  <script src="{{ asset('/admin/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{ asset('/admin/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
+  <script src="{{ asset('/admin/js/sb-admin-2.min.js')}}"></script>
 @yield('bottom')
 </html>

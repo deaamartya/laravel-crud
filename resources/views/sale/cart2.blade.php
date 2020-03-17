@@ -49,7 +49,7 @@
           <div class="row" style="margin-bottom: 20px">
             <div class="col-6">
               <h6>Nama Customer*</h6>
-                <select class="selectpicker" data-live-search="true" name="customer_id" required id="customer_id">
+                <select class="selectpicker" data-live-search="true" name="customer_id" required id="customer_id" size="5">
                   <option disabled="true" selected="">Pilih customer</option>
                   @foreach($customers as $c)
                   <option value="{{$c -> customer_id}}">{{$c -> first_name}} {{$c -> last_name}}</option>
@@ -58,7 +58,7 @@
               </div>
             <div class="col-6">
               <h6>Nama User*</h6>
-              <select class="selectpicker" data-live-search="true" name="user_id" required id="user_id">
+              <select class="selectpicker" data-live-search="true" name="user_id" required id="user_id" size="5">
                 <option disabled="true" selected="">Pilih user</option>
                 @foreach($users as $c)
                 <option value="{{$c -> user_id}}">{{$c -> first_name}} {{$c -> last_name}}</option>
