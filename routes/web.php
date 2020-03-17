@@ -1,8 +1,10 @@
 <?php
-Route::get('/',function(){
+Route::get('/login',function(){
+	return view('login');
+});
+Route::get('/home',function(){
 	return view('master');
 });
-
 Route::resource('categories', 'CategoryController');
 Route::resource('customer', 'CustomerController');
 Route::resource('product', 'ProductController');
