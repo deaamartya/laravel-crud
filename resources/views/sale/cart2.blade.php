@@ -49,8 +49,7 @@
           <div class="row" style="margin-bottom: 20px">
             <div class="col-6">
               <h6>Nama Customer*</h6>
-                <select class="selectpicker" data-live-search="true" name="customer_id" required id="customer_id" size="5">
-                  <option disabled="true" selected="">Pilih customer</option>
+                <select class="selectpicker" data-live-search="true" name="customer_id" required id="customer_id" data-size="5" multiple title="Pilih Customer....">
                   @foreach($customers as $c)
                   <option value="{{$c -> customer_id}}">{{$c -> first_name}} {{$c -> last_name}}</option>
                   @endforeach
@@ -58,8 +57,7 @@
               </div>
             <div class="col-6">
               <h6>Nama User*</h6>
-              <select class="selectpicker" data-live-search="true" name="user_id" required id="user_id" size="5">
-                <option disabled="true" selected="">Pilih user</option>
+              <select class="selectpicker" data-live-search="true" name="user_id" required id="user_id" data-size="5" multiple title="Pilih User....">
                 @foreach($users as $c)
                 <option value="{{$c -> user_id}}">{{$c -> first_name}} {{$c -> last_name}}</option>
                 @endforeach
@@ -74,6 +72,13 @@
           </div>
           
           <table class="table" id="cart" width="100%" cellspacing="0">
+            <thead style="text-align: center;">
+              <th>Nama Produk</th>
+              <th>Quantity</th>
+              <th>Harga</th>
+              <th>Total Harga</th>
+              <th></th>
+            </thead>
             <tbody>
             </tbody>
           </table>
@@ -82,31 +87,31 @@
             <div class="card" style="background-color: #E06C78; border: 0px; color: white;">
               <div class="card-body">
                   <div class="row align-baseline">
-                    <div class="col-9">
+                    <div class="col-8">
                       <h6 style="text-align: left; ">Sub Total : Rp. </h6>
                       <input type="hidden" id="subtotal">
                     </div>
-                    <div class="col-3">
+                    <div class="col-4">
                       <h6 style="text-align: right;" id="subtotal-val">0</h6>
                     </div>
                   </div>
 
                   <div class="row align-baseline">
-                    <div class="col-9">
+                    <div class="col-8">
                       <h6 style="text-align: left;">Discount : Rp.</h6>
                       <input type="hidden" id="total_discount">
                     </div>
-                    <div class="col-3">
+                    <div class="col-4">
                       <h6 style="text-align: right;" id="total_discount-val">0</h6>
                     </div>
                   </div>
 
                   <div class="row align-baseline">
-                    <div class="col-9">
+                    <div class="col-8">
                     <h6 style="text-align: left; font-size: 14pt;"><b>Total Payment : Rp. </b></h6>
                     <input type="hidden" name="total_payment" id="total_payment">
                     </div>
-                    <div class="col-3">
+                    <div class="col-4">
                       <b><h6 id="total_payment-val" style="text-align: right; font-size: 14pt;">0</h6></b>
                     </div>
                   </div>
@@ -115,8 +120,9 @@
               </div>
             </div>
           </div>
-
-          <input type="submit" class="btn btn-info btn-lg align-self-end" value="Submit">
+          <div class="row justify-content-end" style="margin-top: 60px;">
+              <input type="submit" class="btn btn-info btn-lg" value="Submit">
+          </div>
           </form>
         </div>
       </div>

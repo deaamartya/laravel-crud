@@ -13,38 +13,45 @@ function addRow(id){
 	var markup = "\
       <tr id='"+id+"' style='border: 1px;'>\
 	  \
-	  <td style='text-align: left; padding-left: 50px;' class='align-middle'>\
+	  <td style='text-align: left; padding-left: 40px;' class='align-middle'>\
 	    <div class='row'>\
-	      <h6 class='product_name'>"+name+"</div>\
+	      <h6 class='product_name' style='font-weight:bold;'>"+name+"</div>\
 	    <div class='row'>\
 	      <input type='hidden' name='product_id["+id+"]' value="+id+" readonly id='product_id"+id+"'>#"+id+"</div>\
 	  </td>\
 	  \
 	  <td style='width: 15%;' class='align-middle'>\
-	    <div class='row'>\
+	    <div class='row justify-content-center'>\
 	    	<button class='inc btn btn-sm btn-dark' type='button' onclick='inc("+id+")'>+</button>\
-	    	<input type='number' style='-moz-appearance: textfield; width: 30%; border:1px;text-align: center;' class='quantity' oninput='recount("+id+")' name='jumlah["+id+"]' min='1' id='jumlah"+id+"'required max='"+stock+"' value='1'>\
+	    	<input type='number' style='background-color:#f5f5f5; -moz-appearance: textfield; width: 30%; border:1px;text-align: center;' class='quantity' oninput='recount("+id+")' name='jumlah["+id+"]' min='1' id='jumlah"+id+"'required max='"+stock+"' value='1'>\
 	    	<button class='dec btn btn-sm btn-dark' type='button' onclick='dec("+id+")'>-</button>\
 	    </div>\
 	  </td>\
 	  \
 	  <td style='text-align: right; width:20%;' class='align-middle'>\
-	    <div class='row'>\
+	    <div class='row justify-content-center'>\
 	      <input type='hidden' class='selling_price' name='selling_price["+id+"]' id='price"+id+"' value='"+price+"'>\
 	      @ Rp."+"  "+mprice+"\
 	    </div>\
-	    <div class='row align-text-bottom'>\
-	      <div class='col-4 pl-0 pt-1 align-middle'><h6 style='text-align: left;'>Disc. </h6></div>\
-	      <div class='col-6 px-0'>\
-	        <input type='number' min='0' max='100' oninput='percentDisc("+id+")' class='percent' name='percent["+id+"]' id='percent"+id+"' placeholder='0' style='-moz-appearance: textfield; text-align:right; width:100%;'>\
-	        <input type='hidden' min='0' oninput='recount("+id+")' class='discount' name='discount["+id+"]' id='discount"+id+"' placeholder='0' style='-moz-appearance: textfield; text-align:right;'>\
+	    <div class='row align-text-bottom justify-content-center'>\
+	      <div class='col-4 pl-0 pt-2 align-middle'>\
+	      <h6 style='text-align: left; font-weight:bold;'>Disc. </h6></div>\
+	      <div class='col-4 px-0 pt-1'>\
+	        <input type='number' min='0' max='100' oninput='percentDisc("+id+")' class='percent' \
+	        name='percent["+id+"]' id='percent"+id+"' \
+	        placeholder='0' \
+	        style='-moz-appearance: textfield;padding-right:10px; text-align:right; width: 100%;color: black;border-radius: 10pt;border: 2px solid #E06C78;'>\
+	        <input type='hidden' min='0' oninput='recount("+id+")' \
+	        class='discount' name='discount["+id+"]' \
+	        id='discount"+id+"' placeholder='0' \
+	        style='-moz-appearance: textfield;text-align: right;'>\
 	      </div>\
-	      <div class='col-2' style='text-align: left;'>%</div>\
+	      <div style='text-align: left;font-weight:bold;' class='col-2 pt-2'>%</div>\
 	    </div>\
 	  </td>\
 	  \
 	  <td class='align-middle' style='width: 25%;'>\
-		  <div class='row align-middle'>\
+		  <div class='row align-middle justify-content-end'>\
 		  	<input type='hidden' class='total' name='total["+id+"]' min='1' id='total"+id+"' required>\
 		  	<div class='col-4 pl-4'>\
 		  		<h6 style='text-align: left;'>Rp.  </h6>\
