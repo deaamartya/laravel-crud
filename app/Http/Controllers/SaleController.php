@@ -49,8 +49,12 @@ class SaleController extends Controller
      */
     public function store(Request $input){
 
-        $input->validate(['customer_id' => 'required']);
-
+        $input->validate(['customer_id' => 'required',
+            'nota_id' => 'required',
+            'customer_id' => 'required',
+            'user_id' => 'required',
+            'nota_date' => 'required',
+            'total_payment' => 'required']);
         Sale::create([
             'nota_id' => e($input->input('nota_id')),
             'customer_id' => e($input->input('customer_id')),
@@ -68,7 +72,7 @@ class SaleController extends Controller
             $detailorder->total_price = $input['total'][$key];
             $detailorder->save();
         }
-        return redirect()->route('sale.index');
+        return redirect()->route('sale.index')->with('inserted',$request->input('nota_id'));
     }
 
     /**
@@ -79,7 +83,7 @@ class SaleController extends Controller
      */
     public function show($id){
         $sale = Sale::where('nota_id','=',$id)
-            ->select(DB::raw('CONCAT(customer.first_name," ",customer.last_name) AS c_name'),DB::raw('CONCAT(user.`first_name`," ",`user`.`last_name`) AS u_name'),'nota_date','nota_id','total_payment')
+            ->select(DB::raw('CONCAT(customer.first_name," ",customer.last_name) AS c_name'),DB::raw('CONCAT(user.`first_name`," ",`user`.`last_name`) AS u_name'),'customer.street',DB::raw('CONCAT(customer.city,", ",customer.state," ",customer.zip_code) AS c_address'),'customer.phone','customer.email','user.phone AS u_phone','user.email AS u_email','nota_date','nota_id','total_payment')
             ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
             ->join('user', 'user.user_id', '=', 'sales.user_id')
             ->first();

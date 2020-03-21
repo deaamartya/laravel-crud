@@ -36,6 +36,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'first_name' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'job_status' => 'required']);
         User::create([
             'first_name' => e($request->input('first_name')),
             'last_name' => e($request->input('last_name')),
@@ -44,7 +50,7 @@ class UserController extends Controller
             'password' => e($request->input('password')),
             'job_status' => e($request->input('job_status'))
         ]);
-        return redirect()->route('user.index');
+        return redirect()->route('user.index')->with('inserted',$request->input('first_name'));
     }
 
     /**

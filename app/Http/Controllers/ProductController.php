@@ -42,7 +42,10 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //9000000000
+        $request->validate(['category_id' => 'required',
+                        'product_name' => 'required',
+                        'product_price' => 'required',
+                        'product_stock' => 'required']);
         $price = $request->input('product_price');
         $price = str_replace("Rp ","",$price);
         $price = str_replace(".","",$price);
@@ -52,7 +55,7 @@ class ProductController extends Controller
                         'product_price' => $price,
                         'product_stock' => e($request->input('product_stock')),
                         'explanation' => e($request->input('explanation')) ]);
-        return redirect()->route('product.index');
+        return redirect()->route('product.index')->with('inserted',$request->input('product_name'));
     }
 
     /**

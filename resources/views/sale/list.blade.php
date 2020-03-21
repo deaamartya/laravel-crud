@@ -25,30 +25,78 @@
     <td>{{ $c -> nota_date }}</td>
     <td>{{ $c -> total_payment }}</td>
     <td>
-      <button class="btn btn-success btn-icon-split btn-sm" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" >
+      <a class="btn btn-success btn-icon-split btn-sm" href="{{ route('sale.show',$c -> nota_id) }}">
           <span class="icon text-white-30">
             <i class="material-icons">visibility</i>
           </span>
           <span class="text">Lihat Invoice</span>
-      </button>
+      </a>
       @include('actbtn', 
       array(
       'editlink' => 'sale.edit',
       'id' => $c -> nota_id,
-      'dellink' => 'sale.destroy',
-      'name' => $c -> nota_id,
-      'entity' => 'penjualan',
-      'Entity' => 'Penjualan'))
+      'dellink' => 'sale'))
     </td>
   </div>
 </tr>
-  <div class="row">
-    <div class="collapse" id="collapseExample">
-    <div class="card card-body">
-        Anim pariatur cliche reprehenderit
-    </div>
-  </div>
-  </div>
-
 @endforeach
+@endsection
+@section('tambahankonten')
+  @if(session('deleted'))
+    <script>
+      Swal.fire(
+        'Delete Success!',
+        "Penjualan {{ @session('deleted') }} telah dihapus",
+        'success'
+      )
+    </script>
+  @endif
+  @if(session('inserted'))
+    <script>
+      Swal.fire(
+        'Insert Success!',
+        "Penjualan {{ @session('inserted') }} berhasil ditambahkan",
+        'success'
+      )
+    </script>
+  @endif
+  @if(session('edited'))
+    <script>
+      Swal.fire(
+        'Edit Success!',
+        "Data penjualan dengan ID {{ @session('edited') }} berhasil diubah",
+        'success'
+      )
+    </script>
+  @endif
+@endsection
+
+@section('bottomlink')
+<script>
+$('.delete-confirm').on('click', function (e) {
+    event.preventDefault();
+    const url = $(this).attr('href');
+    Swal.fire({
+    title: 'Apakah kamu yakin?',
+    text: "Penjualan yang dihapus tidak dapat dikembalikan!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Ya, Saya Yakin!',
+    cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.value) {
+            window.location.href = url;
+        }
+        else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire(
+          'Cancelled',
+          'Penjualan tidak dihapus',
+          'error'
+        )
+      }
+    });
+  });
+</script>
 @endsection

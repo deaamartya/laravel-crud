@@ -27,7 +27,7 @@
 							@field
 							    @slot('icon') perm_identity @endslot
 							    @slot('type') text @endslot
-							    @slot('onkey') return lettersOnlySpace(event) @endslot
+							    @slot('onkey') return lettersNum(event) @endslot
 							    @slot('name') product_name @endslot
 							    @slot('req') true @endslot
 							    @slot('maxl') 50 @endslot

@@ -28,20 +28,21 @@
 					    @endfield
 					</div>
 					<div class="col-6" style="margin-bottom: 10px; padding-left: 0px;">
-					    @field
-					    	
-						    @slot('icon') perm_identity @endslot
-						    @slot('type') text @endslot
-						    @slot('onkey') return lettersOnly(event) @endslot
-						    @slot('name') last_name @endslot
-						    @slot('req') true @endslot
-						    @slot('maxl') 50 @endslot
-						    @slot('max') 50 @endslot
-						    @slot('value') @endslot
-						    @slot('label') Nama Belakang @endslot
-						    @slot('help') Masukkan huruf(Aa-Zz) @endslot
-						    @slot('char') 0 / 50 @endslot
-					    @endfield
+					    <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon">
+						  <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading">perm_identity</i>
+						  <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" name="last_name" onkeypress="return lettersOnly(event)" style="-moz-appearance : textfield;" maxlength="50">
+						  <div class="mdc-notched-outline">
+						   <div class="mdc-notched-outline__leading"></div>
+						    <div class="mdc-notched-outline__notch">
+						      <span class="mdc-floating-label" id="my-label-id">Nama Belakang</span>
+						    </div>
+						    <div class="mdc-notched-outline__trailing"></div>
+						  </div>
+						</label>
+						<div class="mdc-text-field-helper-line">
+						  <div class="mdc-text-field-helper-text" id="my-helper-id" aria-hidden="true">Masukkan huruf(Aa-Zz)</div>
+						  <div class="mdc-text-field-character-counter">0 / 50</div>
+						</div>
 					</div>
 				</div>
 				<div class="row">

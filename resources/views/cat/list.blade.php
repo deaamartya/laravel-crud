@@ -22,10 +22,7 @@
     array(
     'editlink' => 'categories.edit',
     'id' => $c -> category_id,
-    'dellink' => 'categories',
-    'name' => $c -> category_name,
-    'entity' => 'kategori',
-    'Entity' => 'Kategori'))
+    'dellink' => 'categories'))
   </td>
 </tr>
 @endforeach

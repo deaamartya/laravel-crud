@@ -7,6 +7,13 @@
     .btn-group-sm > .btn-icon-split.btn .icon, .btn-icon-split.btn-sm .icon {
       padding: 2px 5px;
     };
+    td.details-control {
+    background: url('../resources/details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('../resources/details_close.png') no-repeat center center;
+}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 @endsection
@@ -20,7 +27,7 @@
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <table class="table" id="dataTable" width="100%" cellspacing="0">
+        <table class="table display" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
               @yield('header')

@@ -36,6 +36,13 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate(['first_name' => 'required',
+                            'phone' => 'required',
+                            'email' => 'required',
+                            'street' => 'required',
+                            'city' => 'required',
+                            'state' => 'required',
+                            'zip_code' => 'required']);
         Customer::create([
             'first_name' => e($request->input('first_name')),
             'last_name' => e($request->input('last_name')),
@@ -46,7 +53,7 @@ class CustomerController extends Controller
             'state' => e($request->input('state')),
             'zip_code' => e($request->input('zip_code')),
         ]);
-        return redirect()->route('customer.index');
+        return redirect()->route('customer.index')->with('inserted',$request->input('first_name'));
     }
 
     /**

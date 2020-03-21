@@ -50,23 +50,6 @@ class SaleDetailController extends Controller
      */
     public function store(Request $request)
     {
-        $product = Product::find($request->input('product_id'));
-        $selling_price = $product -> product_price;
-        $quantity = $request->input('quantity');
-        $discount = $request->input('discount');
-        $discount = str_replace("Rp ","",$discount);
-        $discount = str_replace(".","",$discount);
-        $total_price = ($selling_price*$quantity)-$discount;
-
-        SaleDetail::create([
-            'nota_id' => e($request->input('nota_id')),
-            'product_id' => e($request->input('product_id')),
-            'quantity' => e($request->input('quantity')),
-            'selling_price' => $selling_price,
-            'discount' => $discount,
-            'total_price' => $total_price
-        ]);
-        return redirect()->route('saledet.index');
     }
 
     public function insert(Request $request,$id)
