@@ -7,7 +7,6 @@
 		  		<h3 class="m-0 font-weight-bold text-primary">Tambahkan Data Kategori</h3>
 		    </div>
 			<div class="card-body">
-
 				<form method="post" action="{{ route('categories.store') }}" id="catForm">
 					@csrf
 					<div class="col-6" style="margin-bottom: 10px; padding-left: 0px;">
@@ -25,7 +24,7 @@
 						    @slot('char') 0 / 50 @endslot
 					    @endfield
 					</div>
-					<h6 class="m-10 font-italic text-danger">(*) Wajib diisi</h3>
+					<h6 class="m-10 font-italic text-danger">(*) Wajib diisi</h6>
 					<button type="submit" class="btn btn-primary">Submit</button>
 				</form>
 			</div>

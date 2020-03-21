@@ -2,11 +2,13 @@
 @section('headlink')
 	<link href="{{ asset('/admin/vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <!-- <link rel="stylesheet" href="{{ asset('/alert/sweetalert2.min.css') }}"> -->
   <style type="text/css">
     .btn-group-sm > .btn-icon-split.btn .icon, .btn-icon-split.btn-sm .icon {
       padding: 2px 5px;
     };
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 @endsection
 @section('konten')
   <div class="card shadow mb-4">
@@ -14,7 +16,7 @@
   		<h3 class="m-0 font-weight-bold text-primary">Data @yield('judultable')</h3>
       	@yield('btn-insert')
       		<button class="btn btn-primary">Tambah @yield('judultable')</button>
-		</a>
+        </a>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -38,6 +40,7 @@
       </div>
     </div>
   </div>
+  @yield('tambahankonten')
 @endsection
 @section('bottom')
 <script>

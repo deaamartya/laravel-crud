@@ -23,7 +23,7 @@
     <div class="card">
       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
           <h3 class="m-0 font-weight-bold text-primary">Tambahkan Data Penjualan</h3>
-        </div>
+      </div>
       <div class="card-body" style="margin: 20px;">
         <form method="post" action="{{ route('sale.store') }}" id="catForm">
           @csrf
@@ -34,7 +34,7 @@
               <div style="margin-top: 20px;">
                 <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" style="width: 100%;">
                 <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading">calendar_today</i>
-                <input type="date" class="mdc-text-field__input" name="nota_date" required id="nota_date" min="2018-01-01">
+                <input type="date" oninvalid="setCustomValidity('Pilih Tanggal')" class="mdc-text-field__input" name="nota_date" required id="nota_date" min="2018-01-01">
                 <div class="mdc-notched-outline">
                  <div class="mdc-notched-outline__leading"></div>
                   <div class="mdc-notched-outline__notch">
@@ -49,7 +49,7 @@
           <div class="row" style="margin-bottom: 20px">
             <div class="col-6">
               <h6>Nama Customer*</h6>
-                <select class="selectpicker" data-live-search="true" name="customer_id" required id="customer_id" data-size="5" multiple title="Pilih Customer....">
+                <select class="selectpicker" oninvalid="setCustomValidity('Pilih Customer')" data-live-search="true" name="customer_id" required id="customer_id" data-size="5" multiple title="Pilih Customer....">
                   @foreach($customers as $c)
                   <option value="{{$c -> customer_id}}">{{$c -> first_name}} {{$c -> last_name}}</option>
                   @endforeach
@@ -57,75 +57,83 @@
               </div>
             <div class="col-6">
               <h6>Nama User*</h6>
-              <select class="selectpicker" data-live-search="true" name="user_id" required id="user_id" data-size="5" multiple title="Pilih User....">
+              <select class="selectpicker" oninvalid="setCustomValidity('Pilih User')" data-live-search="true" name="user_id" required id="user_id" data-size="5" multiple title="Pilih User....">
                 @foreach($users as $c)
                 <option value="{{$c -> user_id}}">{{$c -> first_name}} {{$c -> last_name}}</option>
                 @endforeach
               </select>
             </div>
           </div>
-          <h6>Nama Produk</h6>
-          <div class="row" style="margin-bottom: 20px">
-            <div class="col-12">
-            <button type="button" class="add-row btn" style="color: white;padding: 10px 15px 10px 15px;background-color: #FF9190;" data-toggle="modal" data-target="#pilihanProduct"><b>Tambah Produk</b></button>
-            </div>
-          </div>
-          
-          <table class="table" id="cart" width="100%" cellspacing="0">
-            <thead style="text-align: center;">
-              <th>Nama Produk</th>
-              <th>Quantity</th>
-              <th>Harga</th>
-              <th>Total Harga</th>
-              <th></th>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-          <div class="row justify-content-end">
-            <div class="col-6">
-            <div class="card" style="background-color: #E06C78; border: 0px; color: white;">
-              <div class="card-body">
-                  <div class="row align-baseline">
-                    <div class="col-8">
-                      <h6 style="text-align: left; ">Sub Total : Rp. </h6>
-                      <input type="hidden" id="subtotal">
-                    </div>
-                    <div class="col-4">
-                      <h6 style="text-align: right;" id="subtotal-val">0</h6>
-                    </div>
-                  </div>
-
-                  <div class="row align-baseline">
-                    <div class="col-8">
-                      <h6 style="text-align: left;">Discount : Rp.</h6>
-                      <input type="hidden" id="total_discount">
-                    </div>
-                    <div class="col-4">
-                      <h6 style="text-align: right;" id="total_discount-val">0</h6>
-                    </div>
-                  </div>
-
-                  <div class="row align-baseline">
-                    <div class="col-8">
-                    <h6 style="text-align: left; font-size: 14pt;"><b>Total Payment : Rp. </b></h6>
-                    <input type="hidden" name="total_payment" id="total_payment">
-                    </div>
-                    <div class="col-4">
-                      <b><h6 id="total_payment-val" style="text-align: right; font-size: 14pt;">0</h6></b>
-                    </div>
-                  </div>
-
-                </div>
+          <div id="keranjang">
+            <div class="row" style="margin-bottom: 20px">
+              <div class="col-12">
+              <button type="button" class="add-row btn" style="color: white;padding: 10px 15px 10px 15px;background-color: #FF4F5B;" data-toggle="modal" data-target="#pilihanProduct"><b>Tambah Produk</b></button>
               </div>
             </div>
-          </div>
-          <div class="row justify-content-end" style="margin-top: 60px;">
-              <input type="submit" class="btn btn-info btn-lg" value="Submit">
-          </div>
+          
+            <table class="table" id="cart" width="100%" cellspacing="0">
+              <thead style="text-align: center;">
+                <th>Nama Produk</th>
+                <th>Quantity</th>
+                <th>Harga</th>
+                <th>Total Harga</th>
+                <th></th>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+
+              <div class="row justify-content-end" style="margin-top: 60px;">
+                <div class="col-7">
+                <div class="card text-black" style="border:3px solid #FF4F5B">
+                  <div class="card-body">
+                      <div class="row align-baseline">
+                        <div class="col-8">
+                          <h6 style="text-align: left; ">Sub Total : Rp </h6>
+                          <input type="hidden" id="subtotal">
+                        </div>
+                        <div class="col-4">
+                          <h6 style="text-align: right;" id="subtotal-val">0</h6>
+                        </div>
+                      </div>
+
+                      <div class="row align-baseline">
+                        <div class="col-8">
+                          <h6 style="text-align: left;">Discount : Rp</h6>
+                          <input type="hidden" id="total_discount">
+                        </div>
+                        <div class="col-4">
+                          <h6 style="text-align: right;" id="total_discount-val">0</h6>
+                        </div>
+                      </div>
+
+                      <div class="row align-baseline">
+                        <div class="col-8">
+                        <h6 style="text-align: left; font-size: 14pt;"><b>Total Payment : Rp </b></h6>
+                        <input type="hidden" name="total_payment" id="total_payment">
+                        </div>
+                        <div class="col-4">
+                          <b><h6 id="total_payment-val" style="text-align: right; font-size: 14pt;">0</h6></b>
+                        </div>
+                      </div>
+                      <div class="row align-middle" style="margin-top: 20px;">
+                        <input type="submit" class="btn btn-info btn-lg mx-2" style="width: 100%; font-weight: bold;" value="SIMPAN">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- end of keranjang -->
           </form>
-        </div>
-      </div>
+          <div class="card mt-5" id="kosong" style="border: 0px;">
+            <img class="card-img" src="{{ asset('/img/empty_cart.svg')}}" style="height: 500px;">
+            <div class="card-img-overlay">
+              <a href="#pilihanProduct" data-toggle="modal">
+                <img src="{{ asset('/img/add_btn.svg')}}" style="height: 40px;margin-top: 150px;margin-left: 240px;" class=" add-row"  >
+              </a>
+          </div>
+        </div> <!-- end of card-body -->
+      </div> <!-- end of card -->
     </div>
   </div>
 
@@ -134,12 +142,13 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
+        <h4 class="m-0 font-weight-bold text-primary">Pilih Produk</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <span aria-hidden="true">&times;</span>
+      </button>
       </div>
       <div class="modal-body">
-      <div class="table-responsive">
+      <div class="table-responsive" id="tableproduk">
           <table class="table table-hover" id="tabelproduk" width="100%">
           <thead>
             <tr>
@@ -169,9 +178,9 @@
                   <div class="mdc-checkbox__ripple"></div>
                 </div>
               </td>
-              <td class="align-middle" width="50%">{{ $p-> product_name }}</td>
-              <td class="align-middle" width="30%">
-                Rp. {{ $p-> product_price }}
+              <td class="align-middle" width="60%">{{ $p-> product_name }}</td>
+              <td class="align-middle" width="20%">
+                Rp  <span class="productprice" style="text-align: right;">{{ $p-> product_price }}</span>
               </td>
               <td class="align-middle" width="10%">{{ $p-> product_stock }}</td>
             </tr>
@@ -180,13 +189,13 @@
         </table>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary btn-lg" id="save">Add to Cart</button>
+      <div class="modal-footer" >
+        <button type="button" class="btn btn-outline-secondary btn-lg" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary btn-lg" style="padding: auto 30px;" id="save">Add to Cart</button>
       </div>
     </div>
   </div>
-</div>
+</div>  <!-- End of Modal Produk-->
 @endsection
 @section('tambahan')
 <script src="/admin/vendor/datatables/jquery.dataTables.min.js"></script>
@@ -195,10 +204,6 @@
 <script src="/js/add-del-row.js"></script>
 <script>
         var products = <?php echo json_encode($product); ?>;
-        $('#tabelproduk').DataTable( {
-            select: true
-        } );
-
         var today = new Date();
         var dd = today.getDate();
         var mm = today.getMonth()+1;
@@ -212,26 +217,27 @@
         today = yyyy+'-'+mm+'-'+dd;
         document.getElementById("nota_date").setAttribute("max", today);
         document.getElementById("nota_date").value = today;
-    
-        function inc(id){
-          var oldValue = $("#jumlah"+id).val();
-          var newVal = parseFloat(oldValue)+1;
-          $("#jumlah"+id).val(newVal);
-          recount(id);
+
+        var prices = document.getElementsByClassName("productprice");
+        for (var i = 0; i < prices.length; ++i) {
+          prices[i].innerHTML = money(prices[i].innerHTML);
         }
 
-        function dec(id){
-          var oldValue = $("#jumlah"+id).val();
-          if (parseFloat(oldValue) > 1) {
-              var newVal = parseFloat(oldValue)-1;
-              $("#jumlah"+id).val(newVal);
+        $('#keranjang').hide();
+        $('#kosong').show();
+        $('#tabelproduk').DataTable();
+
+        function cekSale(){
+          if ($('#cart >tbody >tr').length < 1) {
+              
           }
-          recount(id);
         }
 
-      jQuery( function( $ ) {
-
+      jQuery(function($) {
+        
         $("#save").click(function(){
+          $('#keranjang').show();
+          $('#kosong').hide();
           var checks = $("#tabelproduk").find("input[type=checkbox]:checked");
           var ids = Array();
           for(var i=0;i<checks.length;i++) {
@@ -241,6 +247,7 @@
               addRow(ids[i]);
               $("#tabelproduk tbody tr#"+ids[i]).hide();
           }
+          cekTabelProduk();
         });
 
         $('#tabelproduk tr').click(function() {
@@ -252,6 +259,9 @@
               check.prop("checked", true);
             }
         });
+        
       });
+
+
 </script>
 @endsection

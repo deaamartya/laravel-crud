@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
+use DB;
 
 class CategoryController extends Controller
 {
@@ -36,8 +37,9 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate(['category_name' => 'required']);
         Category::create(['category_name' => e($request->input('category_name'))]);
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.index')->with('inserted',$request->input('category_name'));
     }
 
     /**
@@ -76,7 +78,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
         $category->category_name = e($request->input('category_name'));
         $category->save();
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.index')->with('edited',$id);
     }
 
     /**
@@ -88,7 +90,8 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::find($id);
+        $cat_name = DB::table('categories')->where('category_id', $id)->value('category_name');
         $category->delete();
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.index')->with('deleted',$cat_name);
     }
 }

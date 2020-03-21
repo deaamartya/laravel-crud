@@ -2,6 +2,14 @@ function delRow(id){
   $('#cart tbody tr#'+id).remove();
   getTotal();
   $("#tabelproduk tbody tr#"+id).show();
+	if ($('#cart >tbody >tr').length < 1) {
+      $('#keranjang').hide();
+      $('#kosong').show();
+    }
+    else{
+      $('#keranjang').show();
+      $('#kosong').hide();
+    }
 }
 function addRow(id){
 	var index = getIndex(id);
@@ -22,16 +30,19 @@ function addRow(id){
 	  \
 	  <td style='width: 15%;' class='align-middle'>\
 	    <div class='row justify-content-center'>\
-	    	<button class='inc btn btn-sm btn-dark' type='button' onclick='inc("+id+")'>+</button>\
-	    	<input type='number' style='background-color:#f5f5f5; -moz-appearance: textfield; width: 30%; border:1px;text-align: center;' class='quantity' oninput='recount("+id+")' name='jumlah["+id+"]' min='1' id='jumlah"+id+"'required max='"+stock+"' value='1'>\
-	    	<button class='dec btn btn-sm btn-dark' type='button' onclick='dec("+id+")'>-</button>\
+	    	<button class='inc btn btn-sm btn-dark' type='button' onclick='dec("+id+")'>-</button>\
+	    	<input type='number' \
+	    	style='background-color:#f5f5f5; -moz-appearance: textfield; width: 30%; border:1px;text-align: center;' \
+	    	class='quantity' oninput='recount("+id+")' name='jumlah["+id+"]' min='1' id='jumlah"+id+"'\
+	    	required max='"+stock+"' value='1'>\
+	    	<button class='dec btn btn-sm btn-dark' type='button' onclick='inc("+id+")'>+</button>\
 	    </div>\
 	  </td>\
 	  \
 	  <td style='text-align: right; width:20%;' class='align-middle'>\
 	    <div class='row justify-content-center'>\
 	      <input type='hidden' class='selling_price' name='selling_price["+id+"]' id='price"+id+"' value='"+price+"'>\
-	      @ Rp."+"  "+mprice+"\
+	      @ Rp "+"  "+mprice+"\
 	    </div>\
 	    <div class='row align-text-bottom justify-content-center'>\
 	      <div class='col-4 pl-0 pt-2 align-middle'>\
@@ -54,9 +65,9 @@ function addRow(id){
 		  <div class='row align-middle justify-content-end'>\
 		  	<input type='hidden' class='total' name='total["+id+"]' min='1' id='total"+id+"' required>\
 		  	<div class='col-4 pl-4'>\
-		  		<h6 style='text-align: left;'>Rp.  </h6>\
+		  		<h6 style='text-align: left;'>Rp  </h6>\
 		  	</div>\
-		  	<div class='col-8' >\
+		  	<div class='col-8'>\
 	      		<h6 style='text-align: right; padding-right: 18px;' id='total-val"+id+"'>{{ $p-> product_price }}</h6>\
 	      	</div>\
 		  </div>\

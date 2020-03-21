@@ -49,6 +49,8 @@ class SaleController extends Controller
      */
     public function store(Request $input){
 
+        $input->validate(['customer_id' => 'required']);
+
         Sale::create([
             'nota_id' => e($input->input('nota_id')),
             'customer_id' => e($input->input('customer_id')),
@@ -104,7 +106,7 @@ class SaleController extends Controller
             ->select('sales_detail.nota_id','sales_detail.product_id', 'product.product_name','sales_detail.quantity', 'sales_detail.selling_price','sales_detail.discount','sales_detail.total_price','product.product_stock')
             ->join('product', 'sales_detail.product_id', '=', 'product.product_id')
             ->get();
-        return view('/sale/edit',['users' => $user, 'customers' => $customer,'product' => $product,'sale' => $sale, 'detailorder' => $saledetail]);
+        return view('/sale/edit2',['users' => $user, 'customers' => $customer,'product' => $product,'sale' => $sale, 'detailorder' => $saledetail]);
     }
 
     /**
@@ -122,13 +124,13 @@ class SaleController extends Controller
             'nota_date' => $input->input('nota_date'),
             'total_payment' => $input->input('total_payment')
         ]);
+        SaleDetail::where('nota_id','=',$id)->delete();
         foreach ($input['product_id'] as $key){
-            $discount = 0;
             DB::table('sales_detail')->updateOrInsert(
                 ['nota_id' => $input->input('nota_id'), 'product_id' => $key],
-                ['quantity' => $input['quantity'][$key],
+                ['quantity' => $input['jumlah'][$key],
                 'selling_price' => $input['selling_price'][$key],
-                'discount' => $discount,
+                'discount' => $input['discount'][$key],
                 'total_price' => $input['total'][$key]
             ]);
         }

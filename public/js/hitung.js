@@ -1,3 +1,28 @@
+    function inc(id){
+      var oldValue = $("#jumlah"+id).val();
+      var newVal = parseFloat(oldValue)+1;
+      $("#jumlah"+id).val(newVal);
+      recount(id);
+    }
+
+    function dec(id){
+      var oldValue = $("#jumlah"+id).val();
+      if (parseFloat(oldValue) > 1) {
+          var newVal = parseFloat(oldValue)-1;
+          $("#jumlah"+id).val(newVal);
+      }
+      recount(id);
+    }
+
+    function getDisc($id){
+        
+        var disc = $("#discount"+id).val();
+        var total = $("#total"+id).val();
+        console.log(disc);
+        console.log(total);
+        return parseInt((Number(total-disc)/Number(total))*100);
+    }
+
     function getTotal(){
       console.log("masuk getTotal");
       var totals = document.getElementsByClassName("total");
