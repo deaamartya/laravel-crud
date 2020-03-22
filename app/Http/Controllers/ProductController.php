@@ -91,6 +91,10 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate(['category_id' => 'required',
+                        'product_name' => 'required',
+                        'product_price' => 'required',
+                        'product_stock' => 'required']);
         $product = Product::find($id);
         $price = $request->input('product_price');
         $price = str_replace("Rp ","",$price);
@@ -101,7 +105,7 @@ class ProductController extends Controller
         $product->product_stock = e($request->input('product_stock'));
         $product->explanation = e($request->input('explanation'));
         $product->save();
-        return redirect()->route('product.index');
+        return redirect()->route('product.index')->with('edited',$request->input('product_name'));
     }
 
     /**
@@ -114,6 +118,6 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $product->delete();
-        return redirect()->route('product.index');
+        return redirect()->route('product.index')->with('deleted',$id);
     }
 }

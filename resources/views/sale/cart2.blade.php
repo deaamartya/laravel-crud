@@ -20,7 +20,7 @@
 @section('kontent')
 <div class="row">
   <div class="col">
-    <div class="card">
+    <div class="card shadow mb-5">
       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
           <h3 class="m-0 font-weight-bold text-primary">Tambahkan Data Penjualan</h3>
       </div>
@@ -49,7 +49,7 @@
           <div class="row" style="margin-bottom: 20px">
             <div class="col-6">
               <h6>Nama Customer*</h6>
-                <select class="selectpicker" oninvalid="setCustomValidity('Pilih Customer')" data-live-search="true" name="customer_id" required id="customer_id" data-size="5" multiple title="Pilih Customer....">
+                <select class="selectpicker" oninvalid="setCustomValidity('Pilih Customer')" data-live-search="true" name="customer_id" required id="customer_id" data-size="5" title="Pilih Customer....">
                   @foreach($customers as $c)
                   <option value="{{$c -> customer_id}}">{{$c -> first_name}} {{$c -> last_name}}</option>
                   @endforeach
@@ -57,7 +57,7 @@
               </div>
             <div class="col-6">
               <h6>Nama User*</h6>
-              <select class="selectpicker" oninvalid="setCustomValidity('Pilih User')" data-live-search="true" name="user_id" required id="user_id" data-size="5" multiple title="Pilih User....">
+              <select class="selectpicker" oninvalid="setCustomValidity('Pilih User')" data-live-search="true" name="user_id" required id="user_id" data-size="5" title="Pilih User....">
                 @foreach($users as $c)
                 <option value="{{$c -> user_id}}">{{$c -> first_name}} {{$c -> last_name}}</option>
                 @endforeach

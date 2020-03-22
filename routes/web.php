@@ -1,12 +1,4 @@
 <?php
-Route::get('/login',function(){
-	return view('login');
-});
-
-Route::get('/',function(){
-	return view('home');
-});
-
 Route::resource('categories', 'CategoryController');
 Route::resource('customer', 'CustomerController');
 Route::resource('product', 'ProductController');
@@ -19,3 +11,11 @@ Route::get('customer/delete/{id}','CustomerController@destroy');
 Route::get('product/delete/{id}','ProductController@destroy');
 Route::get('sale/delete/{id}','SaleController@destroy');
 Route::get('user/delete/{id}','UserController@destroy');
+Route::get('login','UserController@login');
+Route::get('logout','UserController@logout');
+Route::post('login/verify','UserController@verify');
+
+Route::get('/home', function(){
+	return view('dashboard');
+}
+);

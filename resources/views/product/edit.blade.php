@@ -21,7 +21,6 @@
 										@else
 										<option value="{{$c -> category_id}}">{{$c -> category_name}}</option>
 									@endif
-									
 								@endforeach
 							</select>
 							</div>

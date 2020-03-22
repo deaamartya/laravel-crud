@@ -34,15 +34,23 @@
 							    @slot('max') 50 @endslot
 							    @slot('value') @endslot
 							    @slot('label') Nama Produk @endslot
-							    @slot('help') Masukkan nama produk dengan huruf (Aa-Zz) @endslot
+							    @slot('err') @error('product_name') mdc-text-field--invalid @enderror @endslot
+								@slot('help') 
+									@if ($errors->has('product_name'))
+							      	Nama produk dengan huruf(Aa-Zz)
+							    	@else
+							      	Masukkan nama produk dengan huruf(Aa-Zz)
+							    	@endif
+							    @endslot
+							    @slot('err2') @error('product_name','mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg') @enderror @endslot
 							    @slot('char') 0 / 50 @endslot
 						    @endfield
 						</div>
 					</div>
 					<div class="row" style="margin-bottom: 10px">
 						<div class="col-6">
-						    <label class="mdc-text-field mdc-text-field--outlined" style="width: 100%;">
-							  <input id="currency" type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" name="product_price" onkeypress="return numOnly(event)" maxlength="16" required="true">
+						    <label class="mdc-text-field mdc-text-field--outlined @error('product_price') mdc-text-field--invalid @enderror" style="width: 100%;">
+							  <input id="currency" type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" name="product_price" onkeypress="return numOnly(event)" maxlength="16">
 							  <div class="mdc-notched-outline">
 							   <div class="mdc-notched-outline__leading"></div>
 							    <div class="mdc-notched-outline__notch">
@@ -52,7 +60,13 @@
 							  </div>
 							</label>
 							<div class="mdc-text-field-helper-line">
-							  <div class="mdc-text-field-helper-text" id="my-helper-id" aria-hidden="true">Masukkan harga (max. 10 angka)</div>
+							  <div class="mdc-text-field-helper-text @error('product_price','mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg') @enderror" id="my-helper-id" aria-hidden="true">
+							  	@if ($errors->has('product_price'))
+						      	Harga harus diisi
+						    	@else
+						      	Masukkan harga (max. 10 angka)
+						    	@endif
+						    	</div>
 							</div>
 							
 						</div>
@@ -68,7 +82,16 @@
 							    @slot('maxl') 3 @endslot
 							    @slot('value') @endslot
 							    @slot('label') Stok Produk @endslot
-							    @slot('help') Masukkan stok produk (0-999) @endslot
+							    @slot('help')  @endslot
+							    @slot('err') @error('product_stock') mdc-text-field--invalid @enderror @endslot
+								@slot('help') 
+									@if ($errors->has('product_stock'))
+							      	Stok produk harus diisi(0-999)
+							    	@else
+							      	Masukkan stok produk (0-999)
+							    	@endif
+							    @endslot
+							    @slot('err2') @error('product_stock','mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg') @enderror @endslot
 							    @slot('char') 0 / 50 @endslot
 						    @endfield
 						</div>

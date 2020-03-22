@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use DB;
 
 class CategoryController extends Controller
@@ -35,9 +36,9 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $request->validate(['category_name' => 'required']);
+
         Category::create(['category_name' => e($request->input('category_name'))]);
         return redirect()->route('categories.index')->with('inserted',$request->input('category_name'));
     }
@@ -75,6 +76,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate(['category_name' => 'required']);
         $category = Category::find($id);
         $category->category_name = e($request->input('category_name'));
         $category->save();

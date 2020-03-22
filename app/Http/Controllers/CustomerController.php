@@ -88,6 +88,13 @@ class CustomerController extends Controller
      */
     public function update(Request $request,$id)
     {
+        $request->validate(['first_name' => 'required',
+                            'phone' => 'required',
+                            'email' => 'required',
+                            'street' => 'required',
+                            'city' => 'required',
+                            'state' => 'required',
+                            'zip_code' => 'required']);
         $customer = Customer::find($id);
         $customer->update([
             'first_name' => e($request->input('first_name')),
@@ -99,7 +106,7 @@ class CustomerController extends Controller
             'state' => e($request->input('state')),
             'zip_code' => e($request->input('zip_code'))
         ]);
-        return redirect()->route('customer.index');
+        return redirect()->route('customer.index')->with('edited',$id);
     }
 
     /**
@@ -112,6 +119,6 @@ class CustomerController extends Controller
     {
         $customer = Customer::find($id);
         $customer->delete();
-        return redirect()->route('customer.index');
+        return redirect()->route('customer.index')->with('deleted',$id);
     }
 }

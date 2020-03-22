@@ -11,16 +11,23 @@
 					@csrf
 					<div class="col-6" style="margin-bottom: 10px; padding-left: 0px;">
 						@field
+							@slot('err') @error('category_name') mdc-text-field--invalid @enderror @endslot
+							@slot('help') 
+								@if ($errors->has('category_name'))
+						      	Nama kategori harus diisi dengan huruf(Aa-Zz)
+						    	@else
+						      	Masukkan huruf(Aa-Zz)
+						    	@endif
+						    @endslot
+						    @slot('err2') @error('category_name','mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg') @enderror @endslot
 						    @slot('icon') dns @endslot
 						    @slot('type') text @endslot
 						    @slot('onkey') return lettersOnlySpace(event) @endslot
 						    @slot('name') category_name @endslot
-						    @slot('req') true @endslot
 						    @slot('maxl') 50 @endslot
 						    @slot('max') 50 @endslot
 						    @slot('value') @endslot
 						    @slot('label') Nama Kategori @endslot
-						    @slot('help') Masukkan huruf(A-Z) @endslot
 						    @slot('char') 0 / 50 @endslot
 					    @endfield
 					</div>

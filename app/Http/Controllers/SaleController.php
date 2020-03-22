@@ -48,13 +48,13 @@ class SaleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $input){
-
         $input->validate(['customer_id' => 'required',
-            'nota_id' => 'required',
-            'customer_id' => 'required',
-            'user_id' => 'required',
-            'nota_date' => 'required',
-            'total_payment' => 'required']);
+                        'nota_id' => 'required',
+                        'customer_id' => 'required',
+                        'user_id' => 'required',
+                        'nota_date' => 'required',
+                        'total_payment' => 'required']);
+
         Sale::create([
             'nota_id' => e($input->input('nota_id')),
             'customer_id' => e($input->input('customer_id')),
@@ -72,7 +72,7 @@ class SaleController extends Controller
             $detailorder->total_price = $input['total'][$key];
             $detailorder->save();
         }
-        return redirect()->route('sale.index')->with('inserted',$request->input('nota_id'));
+        return redirect()->route('sale.index')->with('inserted',$input->input('nota_id'));
     }
 
     /**
@@ -121,6 +121,13 @@ class SaleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $input,$id){
+        $input->validate(['customer_id' => 'required',
+            'nota_id' => 'required',
+            'customer_id' => 'required',
+            'user_id' => 'required',
+            'nota_date' => 'required',
+            'total_payment' => 'required']);
+
         Sale::where('nota_id','=',$id)->update([
             'nota_id' => $input->input('nota_id'),
             'customer_id' => $input->input('customer_id'),
@@ -128,6 +135,7 @@ class SaleController extends Controller
             'nota_date' => $input->input('nota_date'),
             'total_payment' => $input->input('total_payment')
         ]);
+
         SaleDetail::where('nota_id','=',$id)->delete();
         foreach ($input['product_id'] as $key){
             DB::table('sales_detail')->updateOrInsert(
@@ -138,7 +146,7 @@ class SaleController extends Controller
                 'total_price' => $input['total'][$key]
             ]);
         }
-        return redirect()->route('sale.index');
+        return redirect()->route('sale.index')->with('edited',$id);
     }
 
     /**
@@ -147,11 +155,10 @@ class SaleController extends Controller
      * @param  \App\Sale  $sale
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id){
         $detailorder = SaleDetail::where('nota_id','=',$id)->delete();
         $sale = Sale::where('nota_id','=',$id)->first();
         $sale->delete();
-        return redirect()->route('sale.index');
+        return redirect()->route('sale.index')->with('deleted',$id);
     }
 }
