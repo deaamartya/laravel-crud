@@ -15,12 +15,15 @@
 					<h6>Nama Kategori Produk</h6>
 					<div class="row" style="margin-bottom: 20px">
 						<div class="col-9">
-							<select class="selectpicker" data-live-search="true" name="category_id" required>
-								<option disabled="true" selected="">Pilih kategori</option>
+							
+							<select class="selectpicker @error('category_id') is-invalid @enderror" data-live-search="true" name="category_id" data-size="5" title="Pilih Tipe Kategori....">
 								@foreach($categories as $c)
 								<option value="{{$c -> category_id}}">{{$c -> category_name}}</option>
 								@endforeach
 							</select>
+				                @if ($errors->has('category_id'))
+				                  <h6 style="margin-top: 10px;" class="text-danger">Kategori harus diisi</h6>
+				                @endif
 						</div>
 					</div>
 					

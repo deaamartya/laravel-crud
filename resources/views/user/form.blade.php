@@ -1,4 +1,4 @@
-@extends('inputmaster')
+@extends('selectfield')
 @section('Judul','Insert User')
 @section('kontent')
 <div class="row">
@@ -11,7 +11,21 @@
 
 				<form method="post" action="{{ route('user.store') }}" id="catForm">
 					@csrf
+					<h6>Tipe User</h6>
+					<div class="row" style="margin-bottom: 20px">
+						<div class="col-9">
+							<select class="selectpicker @error('job_status') is-invalid @enderror" data-live-search="true" name="job_status" data-size="5" title="Pilih Tipe User....">
+								@foreach($job_type as $j)
+								<option value="{{$j -> id}}">{{$j -> nama_job}}</option>
+								@endforeach
+							</select>
+				                @if ($errors->has('job_status'))
+				                  <h6 style="margin-top: 10px;" class="text-danger">Tipe User harus diisi</h6>
+				                @endif
+						</div>
+					</div>
 					<div class="row">
+
 					<div class="col-6" style="margin-bottom: 10px; padding-left: 0px;">
 						@field
 							
@@ -134,34 +148,6 @@
 					    @endfield
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-5" style="margin-bottom: 10px; padding-left: 0px;">
-					    @field
-						    @slot('icon') location_city @endslot
-						    @slot('type') text @endslot
-						    @slot('onkey') return lettersOnlySpace(event) @endslot
-						    @slot('name') job_status @endslot
-						    @slot('req') true @endslot
-						    @slot('maxl') 15 @endslot
-						    @slot('max') 15 @endslot
-						    @slot('value') @endslot
-						    @slot('label') Job Status @endslot
-						    @slot('err') 
-						    	@error('job_status') mdc-text-field--invalid @enderror 
-						    @endslot
-							@slot('help') 
-								@if ($errors->has('job_status'))
-						      	Status harus diisi
-						    	@else
-						      	Masukkan status
-						    	@endif
-						    @endslot
-						    @slot('err2') @error('job_status','mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg') @enderror @endslot
-						    @slot('char') 0 / 15 @endslot
-					    @endfield
-					</div>
-				</div>
-
 					<h6 class="m-10 font-italic text-danger">(*) Wajib diisi</h3>
 					<button type="submit" class="btn btn-primary btn-block">Submit</button>
 				</form>

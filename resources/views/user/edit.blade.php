@@ -1,5 +1,5 @@
-@extends('inputmaster')
-@section('Judul','Edit Kategori')
+@extends('selectfield')
+@section('Judul','Edit User')
 @section('kontent')
 <div class="row">
 	<div class="col">
@@ -9,9 +9,26 @@
 		    </div>
 			<div class="card-body" style="margin: 10px; padding: 20px;">
 
-				<form method="post" action="{{ route('user.update', $user->user_id) }}" id="catForm">
+				<form method="post" action="{{ route('user.update', $user->user_id) }}" id="catForm" style="padding: 20px;">
 					@method('PUT')
 					@csrf
+					<h6>Tipe User</h6>
+					<div class="row" style="margin-bottom: 20px">
+						<div class="col-9">
+							<select class="selectpicker @error('job_status') is-invalid @enderror" data-live-search="true" name="job_status" data-size="5" title="Pilih Tipe User....">
+								@foreach($job_type as $j)
+									@if($user->job_status == $j-> id)
+									<option value="{{$j -> id}}" selected>{{$j -> nama_job}}</option>
+									@else
+									<option value="{{$j -> id}}">{{$j -> nama_job}}</option>
+									@endif
+								@endforeach
+							</select>
+				                @if ($errors->has('job_status'))
+				                  <h6 style="margin-top: 10px;" class="text-danger">Tipe User harus diisi</h6>
+				                @endif
+						</div>
+					</div>
 					<div class="row">
 					<div class="col-6" style="margin-bottom: 10px; padding-left: 0px;">
 						@field
@@ -132,33 +149,6 @@
 						    @endslot
 						    @slot('err2') @error('password','mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg') @enderror @endslot
 						    @slot('char') 0 / 8 @endslot
-					    @endfield
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-5" style="margin-bottom: 10px; padding-left: 0px;">
-					    @field
-						    @slot('icon') location_city @endslot
-						    @slot('type') text @endslot
-						    @slot('onkey') return lettersOnlySpace(event) @endslot
-						    @slot('name') job_status @endslot
-						    @slot('req') true @endslot
-						    @slot('maxl') 15 @endslot
-						    @slot('max') 15 @endslot
-						    @slot('value') {{ $user -> job_status }} @endslot
-						    @slot('label') Job Status @endslot
-						    @slot('err') 
-						    	@error('job_status') mdc-text-field--invalid @enderror 
-						    @endslot
-							@slot('help') 
-								@if ($errors->has('job_status'))
-						      	Status harus diisi
-						    	@else
-						      	Masukkan status
-						    	@endif
-						    @endslot
-						    @slot('err2') @error('job_status','mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg') @enderror @endslot
-						    @slot('char') 0 / 15 @endslot
 					    @endfield
 					</div>
 				</div>

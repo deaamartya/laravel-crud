@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use DB;
 
 class UserController extends Controller
 {
@@ -33,7 +34,8 @@ class UserController extends Controller
     public function create()
     {
         if(Session::get('login') && (Session('type') == 1)){
-        return view('/user/form');
+            $job_type = DB::table('job_type')->get();
+            return view('/user/form',['job_type' => $job_type]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
@@ -91,7 +93,8 @@ class UserController extends Controller
     {
         if(Session::get('login') && (Session('type') == 1)){
             $user = User::find($id);
-            return view('/user/edit', ['user' => $user]);
+            $job_type = DB::table('job_type')->get();
+            return view('/user/edit', ['user' => $user,'job_type' => $job_type]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
