@@ -48,7 +48,7 @@ function addRow(id){
 	      <div class='col-4 pl-0 pt-2 align-middle'>\
 	      <h6 style='text-align: left; font-weight:bold;'>Disc. </h6></div>\
 	      <div class='col-4 px-0 pt-1'>\
-	        <input type='number' min='0' max='100' oninput='percentDisc("+id+")' class='percent' \
+	        <input type='number' min='0' max='100' oninput='recount("+id+")' class='percent' \
 	        name='percent["+id+"]' id='percent"+id+"' \
 	        placeholder='0' \
 	        style='-moz-appearance: textfield;padding-right:10px; text-align:right; width: 100%;color: black;border-radius: 10pt;border: 2px solid #E06C78;'>\

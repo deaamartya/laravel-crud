@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CustomerController extends Controller
 {
@@ -14,8 +15,13 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::all();
-        return view('cust/list', ['customers' => $customers]);
+        if(Session::get('login') && ((Session('type') == 3 || Session('type') == 2) || (Session('type') == 1))){
+            $customers = Customer::all();
+            return view('cust/list', ['customers' => $customers]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -25,7 +31,12 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('/cust/form');
+        if(Session::get('login') && (Session('type') == 3)){
+            return view('/cust/form');
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -43,6 +54,7 @@ class CustomerController extends Controller
                             'city' => 'required',
                             'state' => 'required',
                             'zip_code' => 'required']);
+        if(Session::get('login') && (Session('type') == 3)){
         Customer::create([
             'first_name' => e($request->input('first_name')),
             'last_name' => e($request->input('last_name')),
@@ -54,17 +66,10 @@ class CustomerController extends Controller
             'zip_code' => e($request->input('zip_code')),
         ]);
         return redirect()->route('customer.index')->with('inserted',$request->input('first_name'));
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Customer $customer)
-    {
-        //
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -75,8 +80,13 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
+        if(Session::get('login') && (Session('type') == 3)){
         $customer = Customer::find($id);
         return view('/cust/edit', ['customer' => $customer]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -95,6 +105,7 @@ class CustomerController extends Controller
                             'city' => 'required',
                             'state' => 'required',
                             'zip_code' => 'required']);
+        if(Session::get('login') && (Session('type') == 3)){
         $customer = Customer::find($id);
         $customer->update([
             'first_name' => e($request->input('first_name')),
@@ -107,6 +118,10 @@ class CustomerController extends Controller
             'zip_code' => e($request->input('zip_code'))
         ]);
         return redirect()->route('customer.index')->with('edited',$id);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -117,8 +132,13 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        $customer = Customer::find($id);
-        $customer->delete();
-        return redirect()->route('customer.index')->with('deleted',$id);
+        if(Session::get('login') && (Session('type') == 1)){
+            $customer = Customer::find($id);
+            $customer->delete();
+            return redirect()->route('customer.index')->with('deleted',$id);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 }

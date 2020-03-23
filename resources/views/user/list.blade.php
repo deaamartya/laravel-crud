@@ -1,10 +1,15 @@
 @extends('selectmaster')
 
+@section('Judul','Data User')
 @section('judultable','User')
 
-@section('btn-insert')
-<a href="{{ route('user.create') }}">
-@endsection
+@if(session('type') == 1)
+  @section('btn-insert')
+  <a href="{{ route('user.create') }}">
+    <button class="btn btn-primary">Tambah User</button>
+  </a>
+  @endsection
+@endif
 
 @section('header')
   <th>ID</th>
@@ -26,11 +31,16 @@
 	<td>{{ $c->email }}</td>
 	<td>{{ $c->job_status }}</td>
   <td>
-    @include('actbtn', 
-    array(
-    'editlink' => 'user.edit',
-    'id' => $c -> user_id,
-    'dellink' => 'user'))
+      @if(session('type') == 1)
+      @include('editbtn', 
+      array(
+      'editlink' => 'user.edit',
+      'id' => $c -> user_id))
+      @include('delbtn', 
+      array(
+      'id' => $c -> user_id,
+      'dellink' => 'user'))
+      @endif
   </td>
 </tr>
 @endforeach

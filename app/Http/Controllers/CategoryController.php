@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 use DB;
 
 class CategoryController extends Controller
@@ -16,8 +17,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        return view('cat/list', ['categories' => $categories]);
+        if(Session::get('login') && ((Session('type') == 4 || Session('type') == 2) || (Session('type') == 1))){
+            $categories = Category::all();
+            return view('cat/list', ['categories' => $categories]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -27,7 +33,12 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('/cat/form');
+        if(Session::get('login') && (Session('type') == 4)){
+            return view('/cat/form');
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -37,21 +48,14 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        $request->validate(['category_name' => 'required']);
-
-        Category::create(['category_name' => e($request->input('category_name'))]);
-        return redirect()->route('categories.index')->with('inserted',$request->input('category_name'));
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        
+        if(Session::get('login') && (Session('type') == 4)){
+            $request->validate(['category_name' => 'required']);
+            Category::create(['category_name' => e($request->input('category_name'))]);
+            return redirect()->route('categories.index')->with('inserted',$request->input('category_name'));
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -62,9 +66,13 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::find($id);
-        return view('/cat/edit', ['category' => $category]);
-
+        if(Session::get('login') && (Session('type') == 4)){
+            $category = Category::find($id);
+            return view('/cat/edit', ['category' => $category]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -74,26 +82,29 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        $request->validate(['category_name' => 'required']);
-        $category = Category::find($id);
-        $category->category_name = e($request->input('category_name'));
-        $category->save();
-        return redirect()->route('categories.index')->with('edited',$id);
+    public function update(Request $request, $id){
+        if(Session::get('login') && (Session('type') == 4)){
+            $request->validate(['category_name' => 'required']);
+            $category = Category::find($id);
+            $category->category_name = e($request->input('category_name'));
+            $category->save();
+            return redirect()->route('categories.index')->with('edited',$id);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $category = Category::find($id);
-        $cat_name = DB::table('categories')->where('category_id', $id)->value('category_name');
-        $category->delete();
-        return redirect()->route('categories.index')->with('deleted',$cat_name);
+    public function destroy($id){
+
+        if(Session::get('login') && (Session('type') == 1)){
+            $category = Category::find($id);
+            $cat_name = DB::table('categories')->where('category_id', $id)->value('category_name');
+            $category->delete();
+            return redirect()->route('categories.index')->with('deleted',$cat_name);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 }

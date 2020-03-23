@@ -8,22 +8,23 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Judul</title>
+  <title>Login</title>
 
   <!-- Custom fonts for this template-->
   <link href="{{ asset('/admin/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link rel="icon" type="image/png" href="{{asset('/img/store.png')}}">
 
   <!-- Custom styles for this template-->
   <link href="{{ asset('/admin/css/sb-admin-2.min.css')}}" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
   <style>
     .bg-login-image {
     background: url('/img/login.svg');
         background-position-x: 0%;
         background-position-y: 0%;
         background-repeat: repeat;
-        background-size: auto;
     background-position: center;
     background-size: 80%;
     background-repeat: no-repeat;
@@ -55,7 +56,7 @@
   <div class="container my-5" style="min-height: 766px;">
 
     <!-- Outer Row -->
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" style="min-height: 766px;">
 
       <div class="col-xl-10 col-lg-12 col-md-9">
 
@@ -64,17 +65,17 @@
             <!-- Nested Row within Card Body -->
             <div class="row">
               <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-              <div class="col-lg-6">
+              <div class="col-lg-6 py-5">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                    <h1 class="h4 text-gray-900 mb-5">Welcome Back!</h1>
                   </div>
                   <form action="{{url('/login/verify')}}" method="post">
                     @csrf
                     <div class="form-group">
                       <input type="email" class="form-control form-control-user" placeholder="Enter Email Address..." name="email" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-5">
                       <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password" name="password" required maxlength="8">
                     </div>
                     <button type="submit" class="btn btn-primary btn-user btn-block">
@@ -82,12 +83,6 @@
                     </button>
                   </form>
                   <hr>
-                  <div class="text-center">
-                    <a class="small" href="forgot-password.html">Forgot Password?</a>
-                  </div>
-                  <div class="text-center">
-                    <a class="small" href="register.html">Create an Account!</a>
-                  </div>
                 </div>
               </div>
             </div>

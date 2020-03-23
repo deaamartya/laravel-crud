@@ -22,8 +22,6 @@ tr.shown td.details-control {
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
   		<h3 class="m-0 font-weight-bold text-primary">Data @yield('judultable')</h3>
       	@yield('btn-insert')
-      		<button class="btn btn-primary">Tambah @yield('judultable')</button>
-        </a>
     </div>
     <div class="card-body">
       <div class="table-responsive">

@@ -1,4 +1,5 @@
 @extends('selectfield')
+@section('Judul','Insert Penjualan')
 @section('tambahlink')
   <link href="/admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
@@ -47,22 +48,23 @@
             </div>
           </div>
           <div class="row" style="margin-bottom: 20px">
-            <div class="col-6">
+            <div class="col-12">
               <h6>Nama Customer*</h6>
-                <select class="selectpicker" oninvalid="setCustomValidity('Pilih Customer')" data-live-search="true" name="customer_id" required id="customer_id" data-size="5" title="Pilih Customer....">
+                <select class="selectpicker @error('customer_id') is-invalid @enderror" data-live-search="true" name="customer_id" id="customer_id" data-size="5" title="Pilih Customer....">
                   @foreach($customers as $c)
                   <option value="{{$c -> customer_id}}">{{$c -> first_name}} {{$c -> last_name}}</option>
                   @endforeach
                 </select>
+                
+                @if ($errors->has('customer_id'))
+                  <h6 style="margin-top: 10px;" class="text-danger">Customer harus diisi</h6>
+                  <h6 style="margin-top: 10px;" class="text-danger">(*) Wajib diisi</h6>
+                @else
+                  <h6 style="margin-top: 10px;" class="text-danger">(*) Wajib diisi</h6>
+                @endif
               </div>
-            <div class="col-6">
-              <h6>Nama User*</h6>
-              <select class="selectpicker" oninvalid="setCustomValidity('Pilih User')" data-live-search="true" name="user_id" required id="user_id" data-size="5" title="Pilih User....">
-                @foreach($users as $c)
-                <option value="{{$c -> user_id}}">{{$c -> first_name}} {{$c -> last_name}}</option>
-                @endforeach
-              </select>
-            </div>
+              
+              <input type="hidden" name="user_id" value="{{session('user_id')}}">
           </div>
           <div id="keranjang">
             <div class="row" style="margin-bottom: 20px">
@@ -227,12 +229,6 @@
         $('#kosong').show();
         $('#tabelproduk').DataTable();
 
-        function cekSale(){
-          if ($('#cart >tbody >tr').length < 1) {
-              
-          }
-        }
-
       jQuery(function($) {
         
         $("#save").click(function(){
@@ -247,7 +243,6 @@
               addRow(ids[i]);
               $("#tabelproduk tbody tr#"+ids[i]).hide();
           }
-          cekTabelProduk();
         });
 
         $('#tabelproduk tr').click(function() {

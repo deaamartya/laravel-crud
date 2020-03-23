@@ -1,10 +1,15 @@
 @extends('selectmaster')
 
+@section('Judul','Data Produk')
 @section('judultable','Produk')
 
+@if(session('type') == 4)
 @section('btn-insert')
 <a href="{{ route('product.create') }}">
+  <button class="btn btn-primary">Tambah Produk)</button>
+</a>
 @endsection
+@endif
 
 @section('header')
   <th>ID</th>
@@ -26,11 +31,17 @@
   <td>{{ $c -> product_stock }}</td>
   <td>{{ $c -> explanation }}</td>
   <td>
-    @include('actbtn', 
+    @if(session('type') == 4)
+      @include('editbtn', 
+      array(
+      'editlink' => 'product.edit',
+      'id' => $c -> product_id))
+    @elseif(session('type') == 1)
+    @include('delbtn', 
     array(
-    'editlink' => 'product.edit',
     'id' => $c -> product_id,
     'dellink' => 'product'))
+    @endif
   </td>
 </tr>
 @endforeach

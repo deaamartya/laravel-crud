@@ -1,10 +1,15 @@
 @extends('selectmaster')
 
+@section('Judul','Data Customer')
 @section('judultable','Customer')
 
-@section('btn-insert')
-<a href="{{ route('customer.create') }}">
-@endsection
+@if(session('type') == 3)
+  @section('btn-insert')
+  <a href="{{ route('customer.create') }}">
+    <button class="btn btn-primary">Tambah Customer</button>
+  </a>
+  @endsection
+@endif
 
 @section('header')
   <th>ID</th>
@@ -32,11 +37,17 @@
 	<td>{{ $c->state }}</td>
 	<td>{{ $c->zip_code }}</td>
   <td>
-    @include('actbtn', 
+    @if(session('type') == 3)
+      @include('editbtn', 
+      array(
+      'editlink' => 'customer.edit',
+      'id' => $c -> customer_id))
+    @elseif(session('type') == 1)
+    @include('delbtn', 
     array(
-    'editlink' => 'customer.edit',
     'id' => $c -> customer_id,
     'dellink' => 'customer'))
+    @endif
   </td>
 </tr>
 @endforeach

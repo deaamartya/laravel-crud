@@ -1,4 +1,5 @@
 @extends('selectfield')
+@section('Judul','Edit Penjualan')
 @section('tambahlink')
   <link href="/admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
@@ -48,9 +49,9 @@
             </div>
           </div>
           <div class="row" style="margin-bottom: 20px">
-            <div class="col-6">
+            <div class="col-12">
               <h6>Nama Customer*</h6>
-                <select class="selectpicker" oninvalid="setCustomValidity('Pilih Customer')" data-live-search="true" name="customer_id" required id="customer_id" data-size="5" multiple title="Pilih Customer....">
+                <select class="selectpicker @error('customer_id') is-invalid @enderror" data-live-search="true" name="customer_id" id="customer_id" data-size="5" title="Pilih Customer....">
                   @foreach($customers as $c)
                   @if($c -> customer_id == $sale -> customer_id)
                     <option value="{{$c -> customer_id}}" selected>{{$c -> first_name}} {{$c -> last_name}}</option>
@@ -59,19 +60,16 @@
                   @endif
                   @endforeach
                 </select>
-              </div>
-            <div class="col-6">
-              <h6>Nama User*</h6>
-              <select class="selectpicker" oninvalid="setCustomValidity('Pilih User')" data-live-search="true" name="user_id" required id="user_id" data-size="5" multiple title="Pilih User....">
-                @foreach($users as $c)
-                @if($c -> user_id == $sale -> user_id)
-                  <option value="{{$c -> user_id}}" selected>{{$c -> first_name}} {{$c -> last_name}}</option>
-                  @else
-                  <option value="{{$c -> user_id}}">{{$c -> first_name}} {{$c -> last_name}}</option>
+                
+                @if ($errors->has('customer_id'))
+                  <h6 style="margin-top: 10px;" class="text-danger">Customer harus diisi</h6>
+                  <h6 style="margin-top: 10px;" class="text-danger">(*) Wajib diisi</h6>
+                @else
+                  <h6 style="margin-top: 10px;" class="text-danger">(*) Wajib diisi</h6>
                 @endif
-                @endforeach
-              </select>
-            </div>
+              </div>
+              
+              <input type="hidden" name="user_id" value="{{session('user_id')}}">
           </div>
           <div id="keranjang">
             <div class="row" style="margin-bottom: 20px">
@@ -125,14 +123,18 @@
                         <div class='col-4 pl-0 pt-2 align-middle'>
                         <h6 style='text-align: left; font-weight:bold;'>Disc. </h6></div>
                         <div class='col-4 px-0 pt-1'>
-                          <input type='number' min='0' max='100' oninput='percentDisc({{ $id }})' class='percent' 
+                          <input type='number' min='0' max='100' oninput='recount({{ $id }})' class='percent' 
                           name='percent[{{ $id }}]' id='percent{{ $id }}'
                           placeholder='0' 
                           style='-moz-appearance: textfield;padding-right:10px; text-align:right; width: 100%;color: black;border-radius: 10pt;border: 2px solid #E06C78;'>
                           <input type='hidden' min='0' oninput='recount({{ $id }})' 
                           class='discount' name='discount[{{ $id }}]' 
                           id='discount{{ $id }}' placeholder='0' 
-                          style='-moz-appearance: textfield;text-align: right;' value="{{$discount}}">
+                          style='-moz-appearance: textfield;text-align: right;' value="
+                          @if($discount != 0)
+                          {{$discount}}
+                          @endif"
+                          >
                         </div>
                         <div style='text-align: left;font-weight:bold;' class='col-2 pt-2'>%</div>
                       </div>

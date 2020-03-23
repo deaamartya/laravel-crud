@@ -1,4 +1,6 @@
+@if(session('type') == 4)
 @extends('selectfield')
+@section('Judul','Insert Produk')
 @section('kontent')
 <div class="row">
 	<div class="col">
@@ -124,3 +126,4 @@
 	</div>
 </div>
 @endsection
+@endif

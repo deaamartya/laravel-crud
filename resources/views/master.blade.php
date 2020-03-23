@@ -11,6 +11,7 @@
 	<link href="{{ asset('/admin/css/sb-admin-2.min.css')}}" rel="stylesheet">
 	<link href="{{ asset('/admin/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/img/store.png">
   <style type="text/css">
     body {
       font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
@@ -45,7 +46,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Admin</div>
+        <div class="sidebar-brand-text mx-3">CRUD</div>
       </a>
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
@@ -61,34 +62,40 @@
 
       <!-- Heading -->
       <div class="sidebar-heading">
-        Interface
+        Data
       </div>
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
           <i class="fas fa-fw fa-cog"></i>
-          <span>Master Tables</span>
+          <span>Master</span>
         </a> 
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="{{ route('categories.index') }}">Category</a>
-            <a class="collapse-item" href="{{ url('product') }}">Products</a>
+            @if(session('type') == 4 || ((session('type') == 2) || (session('type') == 1)))
+            <a class="collapse-item" href="{{ route('categories.index') }}">Kategori</a>
+            <a class="collapse-item" href="{{ url('product') }}">Produk</a>
+            @endif
+            @if((session('type') == 2) || (session('type') == 1))
             <a class="collapse-item" href="{{ url('user') }}">User</a>
+            @endif
+            @if(session('type') == 2 || ((session('type') == 3) || (session('type') == 1)))
             <a class="collapse-item" href="{{ url('customer') }}">Customer</a>
+            @endif
           </div>
         </div>
       </li>
 
-      @if(session('type') >= 3)
+      @if(session('type') == 2 || ((session('type') == 3) || (session('type') == 1)))
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-wrench"></i>
-          <span>Transaction Tables</span>
+          <span>Transaksi</span>
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="{{url('sale')}}">Sales</a>
-            <a class="collapse-item" href="{{url('saledet')}}">Sales Detail</a>
+            <a class="collapse-item" href="{{url('sale')}}">Penjualan</a>
+            <a class="collapse-item" href="{{url('saledet')}}">Detil Penjualan</a>
           </div>
         </div>
       </li>
@@ -117,18 +124,6 @@
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
             <i class="fa fa-bars"></i>
           </button>
-
-          <!-- Topbar Search -->
-          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-            <div class="input-group">
-              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                  <i class="fas fa-search fa-sm"></i>
-                </button>
-              </div>
-            </div>
-          </form>
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">

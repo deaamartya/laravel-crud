@@ -25,13 +25,15 @@
 
     function getTotal(){
       console.log("masuk getTotal");
-      var totals = document.getElementsByClassName("total");
+      var jumlahs = document.getElementsByClassName("quantity");
+      var prices = document.getElementsByClassName("selling_price");
 
       var i;
       var total_p = 0;
-      for (i = 0; i < totals.length; ++i) {
-        total_p = total_p + Number(totals[i].value);
+      for (i = 0; i < jumlahs.length; ++i) {
+        total_p = total_p + Number(jumlahs[i].value * prices[i].value);
       }
+
       document.getElementById('subtotal').value = total_p;
       document.getElementById('subtotal-val').innerHTML = money(total_p);
 
@@ -56,7 +58,7 @@
       var hasil = (Number(percent)/100) * total;
       document.getElementById("discount"+id).value = hasil;
 
-      document.getElementById("total"+id).value = total;
+      document.getElementById("total"+id).value = total-hasil;
       document.getElementById("total-val"+id).innerHTML = money(total-hasil);
       getTotal();
     };

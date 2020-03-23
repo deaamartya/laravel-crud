@@ -1,10 +1,15 @@
 @extends('selectmaster')
 
+@section('Judul','Data Penjualan')
 @section('judultable','Penjualan')
 
-@section('btn-insert')
-<a href="{{ route('sale.create') }}">
-@endsection
+@if(session('type') == 3)
+  @section('btn-insert')
+  <a href="{{ route('sale.create') }}">
+    <button class="btn btn-primary">Tambah Penjualan</button>
+  </a>
+  @endsection
+@endif
 
 @section('header')
   <th>ID</th>
@@ -25,17 +30,25 @@
     <td>{{ $c -> nota_date }}</td>
     <td>{{ $c -> total_payment }}</td>
     <td>
+      @if((session('type') == 3) || ((session('type') == 2) || (session('type') == 1)))
       <a class="btn btn-success btn-icon-split btn-sm" href="{{ route('sale.show',$c -> nota_id) }}">
           <span class="icon text-white-30">
             <i class="material-icons">visibility</i>
           </span>
           <span class="text">Lihat Invoice</span>
       </a>
-      @include('actbtn', 
+      @endif
+      @if(session('type') == 3)
+        @include('editbtn', 
+        array(
+        'editlink' => 'sale.edit',
+        'id' => $c -> nota_id))
+      @elseif(session('type') == 1)
+      @include('delbtn', 
       array(
-      'editlink' => 'sale.edit',
       'id' => $c -> nota_id,
       'dellink' => 'sale'))
+      @endif
     </td>
   </div>
 </tr>

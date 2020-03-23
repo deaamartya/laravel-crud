@@ -16,8 +16,13 @@ class UserController extends Controller
      */
     public function index()
     {
+        if(Session::get('login') && ((Session('type') == 1 || Session('type') == 2))){
         $users = User::all();
         return view('user/list', ['users' => $users]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -27,7 +32,12 @@ class UserController extends Controller
      */
     public function create()
     {
+        if(Session::get('login') && (Session('type') == 1)){
         return view('/user/form');
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -44,6 +54,7 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required',
             'job_status' => 'required']);
+        if(Session::get('login') && (Session('type') == 1)){
         User::create([
             'first_name' => e($request->input('first_name')),
             'last_name' => e($request->input('last_name')),
@@ -53,6 +64,10 @@ class UserController extends Controller
             'job_status' => e($request->input('job_status'))
         ]);
         return redirect()->route('user.index')->with('inserted',$request->input('first_name'));
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -74,9 +89,13 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
-        return view('/user/edit', ['user' => $user]);
-        
+        if(Session::get('login') && (Session('type') == 1)){
+            $user = User::find($id);
+            return view('/user/edit', ['user' => $user]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -94,6 +113,7 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required',
             'job_status' => 'required']);
+        if(Session::get('login') && (Session('type') == 1)){
         $user = User::find($id);
         $user->update([
             'first_name' => e($request->input('first_name')),
@@ -104,6 +124,10 @@ class UserController extends Controller
             'job_status' => e($request->input('job_status'))
         ]);
         return redirect()->route('user.index')->with('edited',$id);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -114,9 +138,14 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        if(Session::get('login') && (Session('type') == 1)){
         $user = User::find($id);
         $user->delete();
         return redirect()->route('user.index')->with('deleted',$id);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     public function verify(Request $request){
@@ -133,6 +162,7 @@ class UserController extends Controller
             if($data->password == $password){
                 Session::put('name',$data->first_name);
                 Session::put('last_name',$data->last_name);
+                Session::put('user_id',$data->user_id);
                 Session::put('email',$data->email);
                 Session::put('type',$data->job_status);
                 Session::put('login',TRUE);

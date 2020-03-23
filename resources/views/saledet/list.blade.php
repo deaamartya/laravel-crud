@@ -1,4 +1,5 @@
 @extends('master')
+@section('Judul','Data Detail Penjualan')
 @section('headlink')
   <link href="/admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">

@@ -1,10 +1,15 @@
 @extends('selectmaster')
 
+@section('Judul','Data Kategori')
 @section('judultable','Kategori')
 
-@section('btn-insert')
-<a href="{{ route('categories.create') }}">
-@endsection
+@if(session('type') == 4)
+  @section('btn-insert')
+  <a href="{{ route('categories.create') }}">
+    <button class="btn btn-primary">Tambah Kategori</button>
+  </a>
+  @endsection
+@endif
 
 @section('header')
   <th>ID</th>
@@ -18,11 +23,17 @@
 	<td>{{ $c -> category_id }}</td>
 	<td>{{ $c -> category_name }}</td>
   <td>
-    @include('actbtn', 
+    @if(session('type') == 4)
+      @include('editbtn', 
+      array(
+      'editlink' => 'categories.edit',
+      'id' => $c -> category_id))
+    @elseif(session('type') == 1)
+    @include('delbtn', 
     array(
-    'editlink' => 'categories.edit',
     'id' => $c -> category_id,
     'dellink' => 'categories'))
+    @endif
   </td>
 </tr>
 @endforeach

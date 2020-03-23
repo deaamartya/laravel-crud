@@ -8,6 +8,7 @@ use App\Customer;
 use App\Product;
 use App\SaleDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use DB;
 
 class SaleController extends Controller
@@ -19,12 +20,16 @@ class SaleController extends Controller
      */
     public function index()
     {
-        $sales = Sale::select(DB::raw('CONCAT(customer.first_name," ",customer.last_name) AS c_fullname'),(DB::raw('CONCAT(user.first_name," ",user.last_name) AS u_fullname')),'sales.nota_id','sales.nota_date','sales.total_payment')
-            ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
-            ->join('user', 'user.user_id', '=', 'sales.user_id')
-            ->get();
-        // return view('sale/list', ['sales' => $sales]);
-        return view('sale/list', ['sales' => $sales]);
+        if(Session::get('login') && ((Session('type') == 3 || Session('type') == 2) || (Session('type') == 1))){
+            $sales = Sale::select(DB::raw('CONCAT(customer.first_name," ",customer.last_name) AS c_fullname'),(DB::raw('CONCAT(user.first_name," ",user.last_name) AS u_fullname')),'sales.nota_id','sales.nota_date','sales.total_payment')
+                ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
+                ->join('user', 'user.user_id', '=', 'sales.user_id')
+                ->get();
+            return view('sale/list', ['sales' => $sales]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -34,11 +39,16 @@ class SaleController extends Controller
      */
     public function create()
     {
-        $user = User::all();
+        if(Session::get('login') && (Session('type') == 3)){
+            $user = User::all();
         $customer = Customer::all();
         $product = Product::all();
         $nota_id = (DB::table('sales')->max('nota_id'))+1;
         return view('/sale/cart2',['users' => $user, 'customers' => $customer,'product' => $product,'nota_id' => $nota_id]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -54,7 +64,7 @@ class SaleController extends Controller
                         'user_id' => 'required',
                         'nota_date' => 'required',
                         'total_payment' => 'required']);
-
+        if(Session::get('login') && (Session('type') == 3)){
         Sale::create([
             'nota_id' => e($input->input('nota_id')),
             'customer_id' => e($input->input('customer_id')),
@@ -73,6 +83,10 @@ class SaleController extends Controller
             $detailorder->save();
         }
         return redirect()->route('sale.index')->with('inserted',$input->input('nota_id'));
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -82,6 +96,7 @@ class SaleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id){
+        if(Session::get('login')  && ((Session('type') == 3 || Session('type') == 2) || (Session('type') == 1)) ){
         $sale = Sale::where('nota_id','=',$id)
             ->select(DB::raw('CONCAT(customer.first_name," ",customer.last_name) AS c_name'),DB::raw('CONCAT(user.`first_name`," ",`user`.`last_name`) AS u_name'),'customer.street',DB::raw('CONCAT(customer.city,", ",customer.state," ",customer.zip_code) AS c_address'),'customer.phone','customer.email','user.phone AS u_phone','user.email AS u_email','nota_date','nota_id','total_payment')
             ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
@@ -92,6 +107,10 @@ class SaleController extends Controller
             ->join('product', 'sales_detail.product_id', '=', 'product.product_id')
             ->get();
         return view('sale/show',['sale' => $sale, 'saledetail' => $saledetail]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -102,6 +121,7 @@ class SaleController extends Controller
      */
     public function edit($id)
     {
+        if(Session::get('login') && (Session('type') == 3)){
         $sale = Sale::where('nota_id','=',$id)->first();
         $user = User::all();
         $customer = Customer::all();
@@ -111,6 +131,10 @@ class SaleController extends Controller
             ->join('product', 'sales_detail.product_id', '=', 'product.product_id')
             ->get();
         return view('/sale/edit2',['users' => $user, 'customers' => $customer,'product' => $product,'sale' => $sale, 'detailorder' => $saledetail]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -127,7 +151,7 @@ class SaleController extends Controller
             'user_id' => 'required',
             'nota_date' => 'required',
             'total_payment' => 'required']);
-
+        if(Session::get('login') && (Session('type') == 3)){
         Sale::where('nota_id','=',$id)->update([
             'nota_id' => $input->input('nota_id'),
             'customer_id' => $input->input('customer_id'),
@@ -147,6 +171,10 @@ class SaleController extends Controller
             ]);
         }
         return redirect()->route('sale.index')->with('edited',$id);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 
     /**
@@ -156,9 +184,14 @@ class SaleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id){
+        if(Session::get('login') && (Session('type') == 1)){
         $detailorder = SaleDetail::where('nota_id','=',$id)->delete();
         $sale = Sale::where('nota_id','=',$id)->first();
         $sale->delete();
         return redirect()->route('sale.index')->with('deleted',$id);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
     }
 }
