@@ -130,11 +130,7 @@
                           <input type='hidden' min='0' oninput='recount({{ $id }})' 
                           class='discount' name='discount[{{ $id }}]' 
                           id='discount{{ $id }}' placeholder='0' 
-                          style='-moz-appearance: textfield;text-align: right;' value="
-                          @if($discount != 0)
-                          {{$discount}}
-                          @endif"
-                          >
+                          style='-moz-appearance: textfield;text-align: right;' value="{{$discount}}">
                         </div>
                         <div style='text-align: left;font-weight:bold;' class='col-2 pt-2'>%</div>
                       </div>
@@ -187,7 +183,7 @@
                       <div class="row align-baseline">
                         <div class="col-8">
                         <h6 style="text-align: left; font-size: 14pt;"><b>Total Payment : Rp </b></h6>
-                        <input type="hidden" name="total_payment" id="total_payment" value="{{$d -> total_payment}}">
+                        <input type="hidden" name="total_payment" id="total_payment" value="{{$sale -> total_payment}}">
                         </div>
                         <div class="col-4">
                           <b><h6 id="total_payment-val" style="text-align: right; font-size: 14pt;">0</h6></b>

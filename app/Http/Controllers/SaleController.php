@@ -21,7 +21,7 @@ class SaleController extends Controller
     public function index()
     {
         if(Session::get('login') && ((Session('type') == 3 || Session('type') == 2) || (Session('type') == 1))){
-            $sales = Sale::select(DB::raw('CONCAT(customer.first_name," ",customer.last_name) AS c_fullname'),(DB::raw('CONCAT(user.first_name," ",user.last_name) AS u_fullname')),'sales.nota_id','sales.nota_date','sales.total_payment')
+            $sales = Sale::select(DB::raw('CONCAT(customer.first_name," ",COALESCE(customer.last_name, "")) AS c_fullname'),(DB::raw('CONCAT(user.first_name," ",user.last_name) AS u_fullname')),'sales.nota_id','sales.nota_date','sales.total_payment')
                 ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
                 ->join('user', 'user.user_id', '=', 'sales.user_id')
                 ->get();
@@ -40,11 +40,11 @@ class SaleController extends Controller
     public function create()
     {
         if(Session::get('login') && (Session('type') == 3)){
-            $user = User::all();
+        $user = User::all();
         $customer = Customer::all();
         $product = Product::all();
         $nota_id = (DB::table('sales')->max('nota_id'))+1;
-        return view('/sale/cart2',['users' => $user, 'customers' => $customer,'product' => $product,'nota_id' => $nota_id]);
+        return view('/sale/cart',['users' => $user, 'customers' => $customer,'product' => $product,'nota_id' => $nota_id]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
@@ -65,24 +65,31 @@ class SaleController extends Controller
                         'nota_date' => 'required',
                         'total_payment' => 'required']);
         if(Session::get('login') && (Session('type') == 3)){
-        Sale::create([
-            'nota_id' => e($input->input('nota_id')),
-            'customer_id' => e($input->input('customer_id')),
-            'user_id' => e($input->input('user_id')),
-            'nota_date' => e($input->input('nota_date')),
-            'total_payment' => e($input->input('total_payment'))
-        ]);
-        foreach ($input['product_id'] as $key) {
-            $detailorder = new SaleDetail;
-            $detailorder->nota_id = $input['nota_id'];
-            $detailorder->product_id = $key;
-            $detailorder->quantity = $input['jumlah'][$key];
-            $detailorder->selling_price = $input['selling_price'][$key];
-            $detailorder->discount = $input['discount'][$key];
-            $detailorder->total_price = $input['total'][$key];
-            $detailorder->save();
-        }
-        return redirect()->route('sale.index')->with('inserted',$input->input('nota_id'));
+            Sale::create([
+                'nota_id' => e($input->input('nota_id')),
+                'customer_id' => e($input->input('customer_id')),
+                'user_id' => e($input->input('user_id')),
+                'nota_date' => e($input->input('nota_date')),
+                'total_payment' => e($input->input('total_payment'))
+            ]);
+            foreach ($input['product_id'] as $key) {
+                $detailorder = new SaleDetail;
+                $detailorder->nota_id = $input['nota_id'];
+                $detailorder->product_id = $key;
+                $detailorder->quantity = $input['jumlah'][$key];
+                $detailorder->selling_price = $input['selling_price'][$key];
+                $detailorder->discount = $input['discount'][$key];
+                $detailorder->total_price = $input['total'][$key];
+                $detailorder->save();
+            }
+            $count = SaleDetail::where('nota_id',$input->nota_id)->count();
+            if($count < 1){
+                Sale::where('nota_id',$input->nota_id)->delete();
+                return back()->withInput();
+            }
+            else{
+                return redirect()->route('sale.index')->with('inserted',$input->input('nota_id'));
+            }
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');

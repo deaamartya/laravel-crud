@@ -15,7 +15,6 @@
 </style>
 @endsection
 @section('kontent')
-<button onclick="cekdata()">click me</button>
 <div class="row">
   <div class="col">
     <div class="card">
@@ -71,10 +70,7 @@
             <select class="selectpicker" data-live-search="true" required id="idproduk" style="width: 100%;">
                 <option disabled="true" selected>Pilih produk</option>
                 @foreach($product as $c)
-                <option value="{{$c -> product_id}}" id="product_id" hidden>{{$c -> product_id}}</option>
-                <option>{{$c -> product_name}}</option>
-                <option hidden>{{$c -> product_price}}</option>
-                <option hidden>{{$c -> product_stock}}</option>
+                <option value="{{$c -> product_id}}">{{$c -> product_name}}</option>
                 @endforeach
             </select>
             <button type="button" class="add-row btn btn-primary" style="padding: 10px 15px 10px 15px; margin-left: 10px;">Tambahkan produk</button>
@@ -82,7 +78,6 @@
           </div>
           <div class="table-responsive">
           <table class="table" id="example" width="100%" cellspacing="0" align="right">
-              
               <tbody>
               </tbody>
           </table>
@@ -90,28 +85,17 @@
           <h6 style="text-align: right;">Sub Total : Rp. <input type="text" id="subtotal" style="text-align: right; border: 0px;"></h6>
           <h6 style="text-align: right;">Discount : Rp.(<input type="text" id="total_discount" style="text-align: right; border: 0px;">)</h6>
           <h6 style="text-align: right;">Total Payment : Rp. <input type="text" name="total_payment" id="total_payment" style="text-align: right; border: 0px;"></h6>
+
           <input type="submit" class="btn btn-info btn-lg align-self-end" value="Submit">
           </form>
         </div>
       </div>
     </div>
   </div>
-<form>
 @endsection
 @section('tambahan')
 <script type="text/javascript">
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1;
-    var yyyy = today.getFullYear();
-    if(dd<10){
-        dd='0'+dd
-    } 
-    if(mm<10){
-        mm='0'+mm
-    } 
-    today = yyyy+'-'+mm+'-'+dd;
-    document.getElementById("nota_date").setAttribute("max", today);
+    var products = <?php echo json_encode($product); ?>;
     
     function getTotal(){
       var totals = document.getElementsByClassName("total");
@@ -144,6 +128,22 @@
       getTotal();
     }
 
+    function getIndex(id){
+      for(var i=0; i<products.length;i++){
+        if(products[i]["product_id"] == id){
+            return i;
+        }
+      }
+    }
+
+    function delRow(id){
+      $("#idproduk option").each(function(){
+        if($(this).val() == id){
+          $(this).show();
+        }
+      });
+    }
+
     function myFunction(id) {
 
       var jumlah = document.getElementById("jumlah"+id).value;
@@ -159,19 +159,21 @@
 
     $(document).ready(function(){
         $(".add-row").click(function(){
-          var y = document.getElementById("idproduk").options;
-          var x = document.getElementById("idproduk").selectedIndex;
-          var id = y[x-1].text;
-          var name = y[x].text;
-          var price = y[x+1].text;
-          var stock = y[x+2].text;
+          var y = $("#idproduk").children("option:selected").val();
+          var i = getIndex(y);
+          console.log(i);
+          $("#idproduk").children("option:selected").hide();
+          var id = products[i]["product_id"];
+          var name = products[i]["product_name"];
+          var price = products[i]["product_price"];
+          var stock = products[i]["product_stock"];
           var markup = "\
             <tr>\
                 <td style='text-align: left; padding-left: 50px;' class='align-middle'>\
                 <div class='row'>\
                   <h6 class='product_name'>"+name+"</div>\
                 <div class='row'>\
-                <input type='hidden' name='product_id["+id+"]' value='#"+id+"' readonly id='product_id"+id+"'>#"+id+"</div>\
+                <input type='hidden' name='product_id["+id+"]' value='"+id+"' readonly id='product_id"+id+"'>#"+id+"</div>\
               </td>\
               <td style='width: 10%;' class='align-middle'>\
               <input type='number' style='width: 100%; border:0px;' class='quantity' oninput='myFunction("+id+")' name='quantity["+id+"]' min='1' id='jumlah"+id+"'required max='"+stock+"' value='1'>\
@@ -194,37 +196,15 @@
               <input type='hidden' class='total' name='total["+id+"]' min='1' id='total"+id+"' required readonly value='0'>Rp. <h6 id='totaltext"+id+"'></div>\
               </td>\
               <td style='width: 5%;' class='align-middle'>\
-              <i class='material-icons del' style='cursor: pointer;'>clear</i>\
+              <i class='material-icons del' style='cursor: pointer;' onclick='delRow("+id+")'>clear</i>\
               </td>\
             </tr>";
           $("table tbody").append(markup);
           myFunction(id);
-          $("#idproduk").prop('selectedIndex',0);
+          
           getTotal();
         });
-
-        $('#example').on('click', '.del', function (){
-            $(this).closest('tr').remove();
-            getTotal();
-        });
     });
-      $('#example').dataTable( {
-    "columns": [
-      { "width": "5%" },
-      { "width": "5%" },
-      { "width": "30%" },
-      { "width": "5%" },
-      { "width": "25%" },
-      { "width": "10%" },
-      { "width": "20%" }
-    ]
-  });  
-      function cekdata(){
-        var passedArray = <?php echo json_encode($product); ?>; 
-        for(var i = 0; i < passedArray.length; i++){ 
-            console.log(passedArray[i]["product_id"]); 
-        }
-      }
 </script>
 <script src="/admin/vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="/admin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
