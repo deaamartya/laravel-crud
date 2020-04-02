@@ -12,6 +12,8 @@ Route::get('product/delete/{id}','ProductController@destroy');
 Route::get('sale/delete/{id}','SaleController@destroy');
 Route::get('user/delete/{id}','UserController@destroy');
 
+Route::post('categories/updateStatus/{id}','CategoryController@updateStatus');
+
 Route::get('login','UserController@login');
 Route::get('logout','UserController@logout');
 Route::post('login/verify','UserController@verify');

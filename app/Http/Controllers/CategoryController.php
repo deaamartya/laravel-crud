@@ -50,7 +50,17 @@ class CategoryController extends Controller
     public function store(Request $request){
         if(Session::get('login') && (Session('type') == 4)){
             $request->validate(['category_name' => 'required']);
-            Category::create(['category_name' => e($request->input('category_name'))]);
+            $status = $request->status;
+
+            if($status == "true"){
+                $status = 1;
+            }
+            else{
+                $status = 0;
+            }
+            Category::create(['category_name' => e($request->input('category_name')),
+                              'status' => $status
+                            ]);
             return redirect()->route('categories.index')->with('inserted',$request->input('category_name'));
         }
         else{
@@ -87,7 +97,6 @@ class CategoryController extends Controller
             $request->validate(['category_name' => 'required']);
             $category = Category::find($id);
             $category->category_name = e($request->input('category_name'));
-            $category->save();
             return redirect()->route('categories.index')->with('edited',$id);
         }
         else{
@@ -102,6 +111,27 @@ class CategoryController extends Controller
             $cat_name = DB::table('categories')->where('category_id', $id)->value('category_name');
             $category->delete();
             return redirect()->route('categories.index')->with('deleted',$cat_name);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
+    }
+
+    public function updateStatus($id, Request $request){
+        if(Session::get('login') && (Session('type') == 1)){
+            $state = Category::find($id,['status']);
+            $state = $state["status"];
+            $status = $state;
+            if($state == "1"){
+                $status = 0;
+            }
+            elseif($state == "0"){
+                $status = 1;
+            }
+            $category = Category::find($id);
+            $category->status = $status;
+            $category->save();
+            return redirect()->route('categories.index')->with('edited',$id);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');

@@ -12,14 +12,23 @@
 @endif
 
 @section('header')
+<th>Status</th>
   <th>ID</th>
   <th>Name</th>
+  
 @endsection
 
 @section('data')
 
 @foreach($categories as $c)
 <tr>
+  <td>
+    @if(($c -> status) == 0)
+    <h5><span class="badge badge-secondary">Tidak Aktif</span></h5>
+    @else
+    <h5><span class="badge badge-success">Aktif</span></h5>
+    @endif
+  </td>
 	<td>{{ $c -> category_id }}</td>
 	<td>{{ $c -> category_name }}</td>
   <td>
@@ -29,10 +38,11 @@
       'editlink' => 'categories.edit',
       'id' => $c -> category_id))
     @elseif(session('type') == 1)
-    @include('delbtn', 
+    @include('updatebtn', 
     array(
     'id' => $c -> category_id,
-    'dellink' => 'categories'))
+    'dellink' => 'categories',
+    'status' => $c -> status))
     @endif
   </td>
 </tr>
@@ -72,6 +82,9 @@
 
 @section('bottomlink')
 <script>
+function submit(id){
+  document.getElementById("switch"+id).submit();
+}
 $('.delete-confirm').on('click', function (e) {
     event.preventDefault();
     const url = $(this).attr('href');

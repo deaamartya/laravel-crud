@@ -20,7 +20,7 @@ class ProductController extends Controller
         if(Session::get('login') && ((Session('type') == 4 || Session('type') == 2) || (Session('type') == 1))){
         $products = DB::table('product')
                 ->join('categories', 'categories.category_id', '=', 'product.category_id')
-                ->select('product.product_id','categories.category_name','product.product_name','product.product_price','product.product_stock','product.explanation')
+                ->select('product.*','categories.category_name')
                 ->get();
         return view('product/list', ['products' => $products]);
         }
@@ -37,7 +37,7 @@ class ProductController extends Controller
     public function create()
     {
         if(Session::get('login') && (Session('type') == 4)){
-        $categories = Category::all();
+        $categories = Category::where('status',1)->get();
         return view('product/form', ['categories' => $categories]);
     }
         else{
@@ -84,7 +84,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         if(Session::get('login') && (Session('type') == 4)){
-        $categories = Category::all();
+        $categories = Category::where('status',1)->get();
         $product = Product::find($id);
         return view('/product/edit', ['product' => $product, 'categories' => $categories]);
     }

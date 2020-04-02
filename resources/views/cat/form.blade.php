@@ -10,6 +10,19 @@
 			<div class="card-body">
 				<form method="post" action="{{ route('categories.store') }}" id="catForm">
 					@csrf
+
+					<div class="row" style="margin-bottom: 20px;">
+						<div class="col-2">
+						<div class="card">
+							<div class="card-body">
+								<div class="custom-control custom-switch">
+									<input type="checkbox" class="custom-control-input" id="switch" onchange="changeVal()" name="status" value="true" checked>
+									<label class="custom-control-label" for="switch" id="label">Aktif</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					</div>
 					<div class="col-6" style="margin-bottom: 10px; padding-left: 0px;">
 						@field
 							@slot('err') @error('category_name') mdc-text-field--invalid @enderror @endslot

@@ -18,7 +18,10 @@ class UserController extends Controller
     public function index()
     {
         if(Session::get('login') && ((Session('type') == 1 || Session('type') == 2))){
-        $users = User::all();
+        $users = DB::table('user')
+                ->join('job_type','user.job_status','job_type.id')
+                ->select('user.*','job_type.nama_job')
+                ->get();
         return view('user/list', ['users' => $users]);
         }
         else{

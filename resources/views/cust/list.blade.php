@@ -29,7 +29,13 @@
 <tr>
 	<td>{{ $c->customer_id }}</td>
 	<td>{{ $c->first_name }}</td>
-	<td>{{ $c->last_name }}</td>
+	<td> 
+    @if($c->last_name == "")
+    -
+    @else
+    {{ $c->last_name }}
+    @endif
+  </td>
 	<td>0{{ $c->phone }}</td>
 	<td>{{ $c->email }}</td>
 	<td>{{ $c->street }}</td>

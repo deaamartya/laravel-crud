@@ -64,5 +64,19 @@ function lettersOnly(evt) {
    }
    return true;
  }
+function changeVal(){
+  var s = document.getElementById("switch");
+  if(s.value == "false"){
+    s.value = "true";
+    document.getElementById("label").innerHTML = "Aktif";
+    
+    console.log("masuk sini woy");
+  }
+  else if(s.value == "true"){
+    s.value = "false";
+    document.getElementById("label").innerHTML = "Non-Aktif";
+    console.log("masuk sini hh");
+  }
+}
 </script>
 @endsection

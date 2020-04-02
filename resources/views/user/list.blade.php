@@ -26,10 +26,14 @@
 <tr>
 	<td>{{ $c->user_id }}</td>
 	<td>{{ $c->first_name }}</td>
-	<td>{{ $c->last_name }}</td>
+	<td>@if($c->last_name == "")
+    -
+    @else
+    {{ $c->last_name }}
+    @endif</td>
 	<td>0{{ $c->phone }}</td>
 	<td>{{ $c->email }}</td>
-	<td>{{ $c->job_status }}</td>
+	<td>{{ $c->nama_job }}</td>
   <td>
       @if(session('type') == 1)
       @include('editbtn', 
