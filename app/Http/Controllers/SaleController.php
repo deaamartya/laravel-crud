@@ -44,7 +44,7 @@ class SaleController extends Controller
         $customer = Customer::all();
         $product = Product::all();
         $nota_id = (DB::table('sales')->max('nota_id'))+1;
-        return view('/sale/cart',['users' => $user, 'customers' => $customer,'product' => $product,'nota_id' => $nota_id]);
+        return view('/sale/cart2',['users' => $user, 'customers' => $customer,'product' => $product,'nota_id' => $nota_id]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');

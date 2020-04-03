@@ -97,6 +97,7 @@ class CategoryController extends Controller
             $request->validate(['category_name' => 'required']);
             $category = Category::find($id);
             $category->category_name = e($request->input('category_name'));
+            $category->save();
             return redirect()->route('categories.index')->with('edited',$id);
         }
         else{
