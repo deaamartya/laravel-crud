@@ -24,9 +24,9 @@
 <tr>
   <td>
     @if(($c -> status) == 0)
-    <h5><span class="badge badge-secondary">Tidak Aktif</span></h5>
+    <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-secondary">Nonaktif</span></h5>
     @else
-    <h5><span class="badge badge-success">Aktif</span></h5>
+    <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-success">Aktif</span></h5>
     @endif
   </td>
 	<td>{{ $c -> category_id }}</td>
@@ -110,5 +110,39 @@ $('.delete-confirm').on('click', function (e) {
       }
     });
   });
+$(document).ready(function(){
+  var SITEURL = '{{URL::to('')}}';
+  $('#dataTable').dataTable({
+     columns: [
+              {name: 'status', orderable: true, width:'10%'},
+              {name: 'category_id', searchable: false, width:'10%'},
+              {name: 'category_name', orderable: true, width:'60%'},
+              {name: 'action', orderable: false, searchable: false, width:'20%'},
+           ],
+    order: [[0, 'desc']]
+  });
+ $('.switch').change(function(){
+    var id = $(this).attr('id');
+    var baseurl = '{{URL::to('')}}';
+    $.ajax({
+        url: baseurl+'/categories/updateStatus/'+id,
+        method: 'GET',
+        success: function(data) {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Kategori '+data.name+' berhasil di update',
+            showConfirmButton: false,
+            timer: 1200
+          });
+          $("#badgestatus"+id).html(data.html);
+          $("#label"+id).html(data.label);
+        },
+        error: function(data) {
+          console.log(data);
+        }
+    });
+  });
+});
 </script>
 @endsection

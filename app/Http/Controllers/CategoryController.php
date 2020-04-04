@@ -6,6 +6,7 @@ use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
+use Redirect,Response;
 use DB;
 
 class CategoryController extends Controller
@@ -18,8 +19,17 @@ class CategoryController extends Controller
     public function index()
     {
         if(Session::get('login') && ((Session('type') == 4 || Session('type') == 2) || (Session('type') == 1))){
-            $categories = Category::all();
-            return view('cat/list', ['categories' => $categories]);
+            if(request()->ajax()) {
+                return datatables()->of(Category::select('*'))
+                ->addColumn('action', 'action_button')
+                ->rawColumns(['action'])
+                ->addIndexColumn()
+                ->make(true);
+            }
+            else{
+              $categories = Category::all();
+              return view('cat/list', ['categories' => $categories]);
+            }
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
@@ -109,7 +119,7 @@ class CategoryController extends Controller
 
         if(Session::get('login') && (Session('type') == 1)){
             $category = Category::find($id);
-            $cat_name = DB::table('categories')->where('category_id', $id)->value('category_name');
+            $cat_name = $category->category_name;
             $category->delete();
             return redirect()->route('categories.index')->with('deleted',$cat_name);
         }
@@ -118,21 +128,23 @@ class CategoryController extends Controller
         }
     }
 
-    public function updateStatus($id, Request $request){
+    public function updateStatus($id){
         if(Session::get('login') && (Session('type') == 1)){
-            $state = Category::find($id,['status']);
-            $state = $state["status"];
-            $status = $state;
-            if($state == "1"){
-                $status = 0;
-            }
-            elseif($state == "0"){
-                $status = 1;
-            }
             $category = Category::find($id);
-            $category->status = $status;
+            if($category->status == 1){
+                $category->status = 0;
+                $name = $category->category_name;
+                $html = '<span class="badge badge-secondary">Nonaktif</span>';
+                $label = 'Aktifkan';
+            }
+            elseif($category->status == 0){
+                $category->status = 1;
+                $name = $category->category_name;
+                $html = '<span class="badge badge-success">Aktif</span>';
+                $label = 'Nonaktifkan';
+            }
             $category->save();
-            return redirect()->route('categories.index')->with('edited',$id);
+            return response()->json(['success' => true,'name' => $name,'html' =>$html,'label' => $label]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');

@@ -141,4 +141,27 @@ class CustomerController extends Controller
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
         }
     }
+
+    public function updateStatus($id){
+        if(Session::get('login') && (Session('type') == 1)){
+            $customer = Customer::find($id);
+            if($customer->status == 1){
+                $customer->status = 0;
+                $name = $customer->first_name +" "+ $customer->last_name;
+                $html = '<span class="badge badge-secondary">Nonaktif</span>';
+                $label = 'Aktifkan';
+            }
+            elseif($customer->status == 0){
+                $customer->status = 1;
+                $name = $customer->first_name +" "+ $customer->last_name;
+                $html = '<span class="badge badge-success">Aktif</span>';
+                $label = 'Nonaktifkan';
+            }
+            $customer->save();
+            return response()->json(['success' => true,'name' => $name,'html' =>$html,'label' => $label]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
+    }
 }

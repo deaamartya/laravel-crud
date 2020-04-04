@@ -12,36 +12,30 @@
 @endif
 
 @section('header')
+  <th>Status</th>
   <th>ID</th>
-  <th>First Name</th>
-  <th>Last Name</th>
+  <th>Name</th>
   <th>Phone</th>
   <th>Email</th>
-  <th>Street</th>
-  <th>City</th>
-  <th>State</th>
-  <th>Zip Code</th>
+  <th>Address</th>
 @endsection
 
 @section('data')
 
 @foreach($customers as $c)
 <tr>
-	<td>{{ $c->customer_id }}</td>
-	<td>{{ $c->first_name }}</td>
-	<td> 
-    @if($c->last_name == "")
-    -
+  <td>
+    @if(($c -> status) == 0)
+    <h5 id="badgestatus{{ $c -> customer_id }}"><span class="badge badge-secondary">Nonaktif</span></h5>
     @else
-    {{ $c->last_name }}
+    <h5 id="badgestatus{{ $c -> customer_id }}"><span class="badge badge-success">Aktif</span></h5>
     @endif
   </td>
+	<td>{{ $c->customer_id }}</td>
+	<td>{{ $c->first_name }} {{ $c->last_name }}</td>
 	<td>0{{ $c->phone }}</td>
 	<td>{{ $c->email }}</td>
-	<td>{{ $c->street }}</td>
-	<td>{{ $c->city }}</td>
-	<td>{{ $c->state }}</td>
-	<td>{{ $c->zip_code }}</td>
+	<td>{{ $c->street }} {{ $c->city }}, {{ $c->state }}, {{ $c->zip_code }}</td>
   <td>
     @if(session('type') == 3)
       @include('editbtn', 
@@ -49,10 +43,11 @@
       'editlink' => 'customer.edit',
       'id' => $c -> customer_id))
     @elseif(session('type') == 1)
-    @include('delbtn', 
+    @include('updatebtn', 
     array(
     'id' => $c -> customer_id,
-    'dellink' => 'customer'))
+    'dellink' => 'customer',
+    'status' => $c -> status))
     @endif
   </td>
 </tr>
@@ -116,5 +111,42 @@ $('.delete-confirm').on('click', function (e) {
       }
     });
   });
+$(document).ready(function(){
+  var SITEURL = '{{URL::to('')}}';
+  $('#dataTable').dataTable({
+    columns: [
+              {name: 'status',width: '3%'},
+              {name: 'customer_id',width: '1%'},
+              {name: 'first_name'},
+              {name: 'phone'},
+              {name: 'email'},
+              {name: 'street'},
+              {name: 'action', orderable: false, searchable: false},
+              ],
+    order: [[0, 'asc']],
+  });
+ $('.switch').change(function(){
+    var id = $(this).attr('id');
+    var baseurl = '{{URL::to('')}}';
+    $.ajax({
+        url: baseurl+'/customer/updateStatus/'+id,
+        method: 'GET',
+        success: function(data) {
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Customer '+data.name+' berhasil di update',
+            showConfirmButton: false,
+            timer: 1200
+          });
+          $("#badgestatus"+id).html(data.html);
+          $("#label"+id).html(data.label);
+        },
+        error: function(data) {
+          console.log(data);
+        }
+    });
+  });
+});
 </script>
 @endsection

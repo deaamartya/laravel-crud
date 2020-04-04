@@ -141,4 +141,27 @@ class ProductController extends Controller
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
         }
     }
+
+    public function updateStatus($id){
+        if(Session::get('login') && (Session('type') == 1)){
+            $product = Product::find($id);
+            if($product->status == 1){
+                $product->status = 0;
+                $name = $product->product_name;
+                $html = '<span class="badge badge-secondary">Nonaktif</span>';
+                $label = 'Aktifkan';
+            }
+            elseif($product->status == 0){
+                $product->status = 1;
+                $name = $product->product_name;
+                $html = '<span class="badge badge-success">Aktif</span>';
+                $label = 'Nonaktifkan';
+            }
+            $product->save();
+            return response()->json(['success' => true,'name' => $name,'html' =>$html,'label' => $label]);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
+    }
 }

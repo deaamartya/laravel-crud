@@ -13,7 +13,7 @@
 
 @section('header')
   <th>ID</th>
-  <th>Nama Kategori</th>
+  <th>Kategori</th>
   <th>Nama Produk</th>
   <th>Harga</th>
   <th>Stok</th>
@@ -27,9 +27,9 @@
 	<td>{{ $c -> product_id }}</td>
 	<td>{{ $c -> category_name }}</td>
   <td>{{ $c -> product_name }}</td>
-  <td>{{ $c -> product_price }}</td>
-  <td>{{ $c -> product_stock }}</td>
-  <td>{{ $c -> explanation }}</td>
+  <td class="price" align="right">{{ $c -> product_price }}</td>
+  <td align="center">{{ $c -> product_stock }}</td>
+  <td>@if($c -> explanation == "") - @else {{ $c -> explanation }} @endif</td>
   <td>
     @if(session('type') == 4)
       @include('editbtn', 
@@ -78,7 +78,24 @@
 @endsection
 
 @section('bottomlink')
+<script type="text/javascript" src="{{ asset('/js/autoNumeric.js') }}"></script>
 <script>
+  $(document).ready(function(){
+    $('.price').autoNumeric('init', {aSep: '.', aDec: ',', aSign: 'Rp ', aPad: false, nBracket: '(,)', lZero: 'deny'});
+    $('#dataTable').dataTable({
+       columns: [
+                {name: 'product_id', width:'5%'},
+                {name: 'category_name', width:'10%'},
+                {name: 'product_name', width:'25%'},
+                {name: 'product_price', width:'15%'},
+                {name: 'product_stock', width:'10%'},
+                {name: 'explanation', width:'20%'},
+                {name: 'action', orderable: false, searchable: false, width:'15%'},
+             ],
+      order: [[0, 'asc']]
+    });
+  });
+
 $('.delete-confirm').on('click', function (e) {
     event.preventDefault();
     const url = $(this).attr('href');

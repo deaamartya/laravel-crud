@@ -1,15 +1,12 @@
-<form id="switch{{$id}}" action="{{ url($dellink.'/updateStatus/'.$id) }}" method="post">
-	@csrf
-	<div class="custom-control custom-switch">
-		@if($status == 1)
-		<input type="checkbox" class="custom-control-input" id="c{{$id}}" onclick="submit({{$id}})" name="status{{$id}}" value="{{$status}}" checked>
-		@else
-		<input type="checkbox" class="custom-control-input" id="c{{$id}}" onclick="submit({{$id}})" name="status{{$id}}" value="{{$status}}">
-		@endif
-		@if($status == 1)
-		<label class="custom-control-label" for="c{{$id}}">Nonaktifan</label>
-		@else
-		<label class="custom-control-label" for="c{{$id}}">Aktifkan</label>
-		@endif
-	</div>
-</form>
+<div class="custom-control custom-switch">
+	@if($status == 1)
+	<input type="checkbox" class="custom-control-input switch" id="{{$id}}" checked>
+	@else
+	<input type="checkbox" class="custom-control-input switch" id="{{$id}}">
+	@endif
+	@if($status == 1)
+	<label id="label{{$id}}" class="custom-control-label" for="{{$id}}">Nonaktifan</label>
+	@else
+	<label id="label{{$id}}" class="custom-control-label" for="{{$id}}">Aktifkan</label>
+	@endif
+</div>

@@ -13,8 +13,7 @@
 
 @section('header')
   <th>ID</th>
-  <th>First Name</th>
-  <th>Last Name</th>
+  <th>Name</th>
   <th>Phone</th>
   <th>Email</th>
   <th>Job Status</th>
@@ -25,12 +24,7 @@
 @foreach($users as $c)
 <tr>
 	<td>{{ $c->user_id }}</td>
-	<td>{{ $c->first_name }}</td>
-	<td>@if($c->last_name == "")
-    -
-    @else
-    {{ $c->last_name }}
-    @endif</td>
+	<td>{{ $c->first_name }} {{ $c->last_name }}</td>
 	<td>0{{ $c->phone }}</td>
 	<td>{{ $c->email }}</td>
 	<td>{{ $c->nama_job }}</td>
@@ -81,6 +75,19 @@
 
 @section('bottomlink')
 <script>
+  $(document).ready(function(){
+    $('#dataTable').dataTable({
+       columns: [
+                {name: 'user_id', width:'5%'},
+                {name: 'first_name', width:'30%'},
+                {name: 'phone', width:'15%'},
+                {name: 'email', width:'15%'},
+                {name: 'nama_job', width:'10%'},
+                {name: 'action', orderable: false, searchable: false, width:'25%'},
+             ],
+      order: [[0, 'asc']]
+    });
+  });
 $('.delete-confirm').on('click', function (e) {
     event.preventDefault();
     const url = $(this).attr('href');
