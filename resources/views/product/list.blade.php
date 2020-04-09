@@ -6,12 +6,13 @@
 @if(session('type') == 4)
 @section('btn-insert')
 <a href="{{ route('product.create') }}">
-  <button class="btn btn-primary">Tambah Produk)</button>
+  <button class="btn btn-primary">Tambah Produk</button>
 </a>
 @endsection
 @endif
 
 @section('header')
+  <th>Status</th>
   <th>ID</th>
   <th>Kategori</th>
   <th>Nama Produk</th>
@@ -24,6 +25,13 @@
 
 @foreach($products as $c)
 <tr>
+  <td>
+    @if(($c -> status) == 0)
+    <h5 id="badgestatus{{ $c -> product_id }}"><span class="badge badge-secondary">Nonaktif</span></h5>
+    @else
+    <h5 id="badgestatus{{ $c -> product_id }}"><span class="badge badge-success">Aktif</span></h5>
+    @endif
+  </td>
 	<td>{{ $c -> product_id }}</td>
 	<td>{{ $c -> category_name }}</td>
   <td>{{ $c -> product_name }}</td>
@@ -37,14 +45,42 @@
       'editlink' => 'product.edit',
       'id' => $c -> product_id))
     @elseif(session('type') == 1)
-    @include('delbtn', 
+    @include('updatebtn', 
     array(
     'id' => $c -> product_id,
-    'dellink' => 'product'))
+    'dellink' => 'product',
+    'status' => $c -> status))
     @endif
   </td>
 </tr>
 @endforeach
+@endsection
+
+@section('dataTrash')
+
+@foreach($trash as $c)
+<tr>
+  <td>
+    <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-secondary">Nonaktif</span></h5>
+  </td>
+  <td>{{ $c -> product_id }}</td>
+  <td>{{ $c -> category_name }}</td>
+  <td>{{ $c -> product_name }}</td>
+  <td class="price" align="right">{{ $c -> product_price }}</td>
+  <td align="center">{{ $c -> product_stock }}</td>
+  <td>@if($c -> explanation == "") - @else {{ $c -> explanation }} @endif</td>
+  <td>
+    @if(session('type') == 1)
+      @include('restorebtn', 
+      array(
+      'id' => $c -> product_id,
+      'dellink' => 'product',
+      'status' => $c -> status))
+    @endif
+  </td>
+</tr>
+@endforeach
+
 @endsection
 
 @section('tambahankonten')
@@ -69,8 +105,8 @@
   @if(session('edited'))
     <script>
       Swal.fire(
-        'Edit Success!',
-        "Data produk dengan ID {{ @session('edited') }} berhasil diubah",
+        'Update Success!',
+        "Produk {{ @session('edited') }} berhasil diubah",
         'success'
       )
     </script>
@@ -80,46 +116,56 @@
 @section('bottomlink')
 <script type="text/javascript" src="{{ asset('/js/autoNumeric.js') }}"></script>
 <script>
-  $(document).ready(function(){
+  $('#dataTable').dataTable({
+   columns: [
+            {name: 'product_id', width:'5%'},
+            {name: 'category_name', width:'10%'},
+            {name: 'product_name', width:'25%'},
+            {name: 'product_price', width:'15%'},
+            {name: 'product_stock', width:'10%'},
+            {name: 'explanation', width:'20%'},
+            {name: 'action', orderable: false, searchable: false, width:'15%'},
+         ],
+  order: [[0, 'asc']]
+  });
+  $('#dataTable1').dataTable({
+     columns: [
+              {name: 'product_id', width:'5%'},
+              {name: 'category_name', width:'10%'},
+              {name: 'product_name', width:'25%'},
+              {name: 'product_price', width:'15%'},
+              {name: 'product_stock', width:'10%'},
+              {name: 'explanation', width:'20%'},
+              {name: 'action', orderable: false, searchable: false, width:'15%'},
+           ],
+    order: [[0, 'asc']]
+  });
     $('.price').autoNumeric('init', {aSep: '.', aDec: ',', aSign: 'Rp ', aPad: false, nBracket: '(,)', lZero: 'deny'});
-    $('#dataTable').dataTable({
-       columns: [
-                {name: 'product_id', width:'5%'},
-                {name: 'category_name', width:'10%'},
-                {name: 'product_name', width:'25%'},
-                {name: 'product_price', width:'15%'},
-                {name: 'product_stock', width:'10%'},
-                {name: 'explanation', width:'20%'},
-                {name: 'action', orderable: false, searchable: false, width:'15%'},
-             ],
-      order: [[0, 'asc']]
-    });
-  });
-
-$('.delete-confirm').on('click', function (e) {
-    event.preventDefault();
-    const url = $(this).attr('href');
-    Swal.fire({
-    title: 'Apakah kamu yakin?',
-    text: "Produk yang dihapus tidak dapat dikembalikan!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Ya, Saya Yakin!',
-    cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.value) {
-            window.location.href = url;
+    
+    $('.delete-confirm').on('click', function (e) {
+      event.preventDefault();
+      const url = $(this).attr('href');
+      Swal.fire({
+      title: 'Apakah kamu yakin?',
+      text: "Produk yang dihapus tidak dapat dikembalikan!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, Saya Yakin!',
+      cancelButtonText: 'Batal'
+      }).then((result) => {
+          if (result.value) {
+              window.location.href = url;
+          }
+          else if (result.dismiss === Swal.DismissReason.cancel) {
+          Swal.fire(
+            'Cancelled',
+            'Produk tidak dihapus',
+            'error'
+          )
         }
-        else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire(
-          'Cancelled',
-          'Produk tidak dihapus',
-          'error'
-        )
-      }
+      });
     });
-  });
 </script>
 @endsection

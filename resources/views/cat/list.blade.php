@@ -50,6 +50,33 @@
 
 @endsection
 
+@section('data')
+
+@foreach($categories as $c)
+<tr>
+  <td>
+    @if(($c -> status) == 0)
+    <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-secondary">Nonaktif</span></h5>
+    @else
+    <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-success">Aktif</span></h5>
+    @endif
+  </td>
+  <td>{{ $c -> category_id }}</td>
+  <td>{{ $c -> category_name }}</td>
+  <td>
+    @if(session('type') == 1)
+    @include('restorebtn', 
+    array(
+    'id' => $c -> category_id,
+    'dellink' => 'categories',
+    'status' => $c -> status))
+    @endif
+  </td>
+</tr>
+@endforeach
+
+@endsection
+
 @section('tambahankonten')
   @if(session('deleted'))
     <script>
@@ -135,8 +162,8 @@ $(document).ready(function(){
             showConfirmButton: false,
             timer: 1200
           });
-          $("#badgestatus"+id).html(data.html);
-          $("#label"+id).html(data.label);
+          $("#badgestatus"+data.id).html(data.html);
+          $("#label"+data.id).html(data.label);
         },
         error: function(data) {
           console.log(data);

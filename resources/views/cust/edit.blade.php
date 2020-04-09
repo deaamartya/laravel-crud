@@ -1,5 +1,5 @@
 @extends('inputmaster')
-@section('Judul','Edit Kategori')
+@section('Judul','Edit Customer')
 @section('kontent')
 <div class="row">
 	<div class="col">

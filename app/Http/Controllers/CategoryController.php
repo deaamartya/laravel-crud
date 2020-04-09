@@ -144,7 +144,7 @@ class CategoryController extends Controller
                 $label = 'Nonaktifkan';
             }
             $category->save();
-            return response()->json(['success' => true,'name' => $name,'html' =>$html,'label' => $label]);
+            return response()->json(['success' => true,'name' => $name,'html' =>$html,'label' => $label,'id' => $id]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');

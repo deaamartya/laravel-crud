@@ -1,11 +1,11 @@
 @extends('selectfield')
-@section('Judul','Edit Kategori')
+@section('Judul','Edit Produk')
 @section('kontent')
 <div class="row">
 	<div class="col">
 		<div class="card">
 			<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-		  		<h3 class="m-0 font-weight-bold text-primary">Tambahkan Data Produk</h3>
+		  		<h3 class="m-0 font-weight-bold text-primary">Edit Data Produk</h3>
 		    </div>
 			<div class="card-body" style="margin: 20px;">
 				<form method="post" action="{{ route('product.update', $product->product_id) }}" id="catForm">
@@ -106,7 +106,7 @@
 							<div class="mdc-text-field text-field mdc-text-field--textarea" style="width: 100%;">
 								<div class="mdc-text-field-character-counter">0 / 100</div>
 
-								<textarea class="mdc-text-field__input" maxlength="100" name="explanation" value="{{$product->explanation}}"></textarea>
+								<textarea class="mdc-text-field__input" maxlength="100" name="explanation">{{$product->explanation}}</textarea>
 
 								<div class="mdc-notched-outline mdc-notched-outline--upgraded">
 									<div class="mdc-notched-outline__leading"></div>

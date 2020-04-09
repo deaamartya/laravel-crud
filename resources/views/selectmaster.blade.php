@@ -46,13 +46,35 @@ tr.shown td.details-control {
       </div>
     </div>
   </div>
+  <div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h3 class="m-0 font-weight-bold text-primary">History @yield('judultable')</h3>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table display" id="dataTable1" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              @yield('header')
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tfoot>
+              @yield('header')
+              <th>Action</th>
+          </tfoot>
+          <tbody>
+            @yield('dataTrash')
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
   @yield('tambahankonten')
 @endsection
 @section('bottom')
 <script src="{{ asset('/admin/vendor/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{ asset('/admin/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
-
 <script src="https://cdn.datatables.net/searchpanes/1.0.1/js/dataTables.searchpanes.min.js"></script>
-
 @yield('bottomlink')
 @endsection

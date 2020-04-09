@@ -18,11 +18,14 @@ class ProductController extends Controller
     public function index()
     {
         if(Session::get('login') && ((Session('type') == 4 || Session('type') == 2) || (Session('type') == 1))){
-        $products = DB::table('product')
+        $products = Product::join('categories', 'categories.category_id', '=', 'product.category_id')
+                ->select('product.*','categories.category_name')
+                ->get();
+        $trash = Product::onlyTrashed()
                 ->join('categories', 'categories.category_id', '=', 'product.category_id')
                 ->select('product.*','categories.category_name')
                 ->get();
-        return view('product/list', ['products' => $products]);
+        return view('product/list', ['products' => $products,'trash' => $trash]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
@@ -58,17 +61,17 @@ class ProductController extends Controller
                         'product_price' => 'required',
                         'product_stock' => 'required']);
         if(Session::get('login') && (Session('type') == 4)){
-        $price = $request->input('product_price');
-        $price = str_replace("Rp ","",$price);
-        $price = str_replace(".","",$price);
-        Product::create(['product_id' => '0',
-                        'category_id' => e($request->input('category_id')),
-                        'product_name' => e($request->input('product_name')),
-                        'product_price' => $price,
-                        'product_stock' => e($request->input('product_stock')),
-                        'explanation' => e($request->input('explanation')) ]);
-        return redirect()->route('product.index')->with('inserted',$request->input('product_name'));
-    }
+            $price = $request->input('product_price');
+            $price = str_replace("Rp ","",$price);
+            $price = str_replace(".","",$price);
+            Product::create(['product_id' => '0',
+                            'category_id' => $request->category_id,
+                            'product_name' => $request->product_name,
+                            'product_price' => $price,
+                            'product_stock' => $request->product_stock,
+                            'explanation' => $request->explanation ]);
+            return redirect()->route('product.index')->with('inserted',$request->product_name);
+        }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
         }
@@ -111,11 +114,11 @@ class ProductController extends Controller
         $price = $request->input('product_price');
         $price = str_replace("Rp ","",$price);
         $price = str_replace(".","",$price);
-        $product->category_id = e($request->input('category_id'));
-        $product->product_name = e($request->input('product_name'));
+        $product->category_id = $request->category_id;
+        $product->product_name = $request->product_name;
         $product->product_price = $price;
-        $product->product_stock = e($request->input('product_stock'));
-        $product->explanation = e($request->input('explanation'));
+        $product->product_stock = $request->product_stock;
+        $product->explanation = $request->explanation;
         $product->save();
         return redirect()->route('product.index')->with('edited',$request->input('product_name'));
     }
@@ -142,6 +145,20 @@ class ProductController extends Controller
         }
     }
 
+    public function restore($id)
+    {
+        if(Session::get('login') && (Session('type') == 1)){
+
+        $product = Product::onlyTrashed()->where('product_id',$id);
+        $product->restore();
+
+        return redirect()->route('product.index')->with('edited',$id);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
+    }
+
     public function updateStatus($id){
         if(Session::get('login') && (Session('type') == 1)){
             $product = Product::find($id);
@@ -158,6 +175,7 @@ class ProductController extends Controller
                 $label = 'Nonaktifkan';
             }
             $product->save();
+            $product->delete();
             return response()->json(['success' => true,'name' => $name,'html' =>$html,'label' => $label]);
         }
         else{
