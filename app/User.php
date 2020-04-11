@@ -3,13 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Model
 {
-
+    use SoftDeletes;
     protected $table = 'user';
     protected $primaryKey = 'user_id';
-    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -20,10 +20,5 @@ class User extends Model
         'first_name','last_name','email','phone','password','job_status'          
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = 'password';
 }

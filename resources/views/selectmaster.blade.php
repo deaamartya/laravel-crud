@@ -11,10 +11,11 @@
     td.details-control {
     background: url('../resources/details_open.png') no-repeat center center;
     cursor: pointer;
-}
-tr.shown td.details-control {
-    background: url('../resources/details_close.png') no-repeat center center;
-}
+    }
+    tr.shown td.details-control {
+        background: url('../resources/details_close.png') no-repeat center center;
+    }
+@yield('tambahstyle')
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 @endsection

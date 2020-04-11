@@ -126,6 +126,11 @@ function money(text){
 			}
 			return result;
 		}
+		else{
+			return text;
+		}
+	}
+	else{
 		return 0;
 	}
 }

@@ -6,6 +6,8 @@ Route::resource('sale', 'SaleController');
 Route::resource('saledet', 'SaleDetailController');
 Route::resource('user', 'UserController');
 
+Route::get('categories/getdata', 'CategoryController@getCategory')->name('categories.getdata');
+
 Route::get('categories/delete/{id}','CategoryController@destroy');
 Route::get('categories/restore/{id}','CategoryController@restore');
 

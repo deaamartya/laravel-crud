@@ -20,20 +20,35 @@ class CategoryController extends Controller
     {
         if(Session::get('login') && ((Session('type') == 4 || Session('type') == 2) || (Session('type') == 1))){
             if(request()->ajax()) {
-                return datatables()->of(Category::select('*'))
-                ->addColumn('action', 'action_button')
-                ->rawColumns(['action'])
-                ->addIndexColumn()
-                ->make(true);
+              return datatables()->of(Category::all())
+                    ->addColumn('status', function($data){
+                        if(($data->status) == 0){
+                          $status ='<h5 id="badgestatus'.$data->category_id.'">';
+                          $status .='<span class="badge badge-secondary">Nonaktif</span></h5>';
+                        }
+                        else{
+                          $status ='<h5 id="badgestatus'.$data->category_id.'">';
+                          $status .='<span class="badge badge-success">Aktif</span></h5>';
+                        }
+                        return $status;
+                    })
+                    ->rawColumns(['status'])
+                    ->make(true);
             }
             else{
               $categories = Category::all();
-              return view('cat/list', ['categories' => $categories]);
+              $trash = Category::onlyTrashed()->get();
             }
+            return view('cat/list',['categories' => $categories,'trash' => $trash]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
         }
+    }
+
+    public function getCategory(){
+        return datatables()->of(Category::all())
+          ->make(true);
     }
 
     /**
@@ -134,17 +149,20 @@ class CategoryController extends Controller
             if($category->status == 1){
                 $category->status = 0;
                 $name = $category->category_name;
+                $category->save();
+                $category->delete();
                 $html = '<span class="badge badge-secondary">Nonaktif</span>';
                 $label = 'Aktifkan';
             }
             elseif($category->status == 0){
                 $category->status = 1;
                 $name = $category->category_name;
+                $category->save();
+                $category->restore();
                 $html = '<span class="badge badge-success">Aktif</span>';
                 $label = 'Nonaktifkan';
             }
-            $category->save();
-            return response()->json(['success' => true,'name' => $name,'html' =>$html,'label' => $label,'id' => $id]);
+            return response()->json(['success' => true,'category' => $category,'html' =>$html]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');

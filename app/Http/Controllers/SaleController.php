@@ -21,11 +21,25 @@ class SaleController extends Controller
     public function index()
     {
         if(Session::get('login') && ((Session('type') == 3 || Session('type') == 2) || (Session('type') == 1))){
-            $sales = Sale::select(DB::raw('CONCAT(customer.first_name," ",COALESCE(customer.last_name, "")) AS c_fullname'),(DB::raw('CONCAT(user.first_name," ",user.last_name) AS u_fullname')),'sales.nota_id','sales.nota_date','sales.total_payment')
+            $sales = Sale::select(DB::raw('CONCAT(customer.first_name," ",COALESCE(customer.last_name, "")) AS c_fullname'),(DB::raw('CONCAT(user.first_name," ",user.last_name) AS u_fullname')),'sales.*')
                 ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
                 ->join('user', 'user.user_id', '=', 'sales.user_id')
                 ->get();
-            return view('sale/list', ['sales' => $sales]);
+                $i=0;
+            foreach($sales as $s) {
+                $sales[$i]["detail"] = SaleDetail::where('nota_id',$s->nota_id)
+                ->select('sales_detail.*','product.product_name')
+                ->join('product','product.product_id','=','sales_detail.product_id')
+                ->get();
+                $i++;
+            }
+            $trash = Sale::onlyTrashed()
+                ->select(DB::raw('CONCAT(customer.first_name," ",COALESCE(customer.last_name, "")) AS c_fullname'),(DB::raw('CONCAT(user.first_name," ",user.last_name) AS u_fullname')),'sales.*')
+                ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
+                ->join('user', 'user.user_id', '=', 'sales.user_id')
+                ->get();
+            // echo($sales);
+            return view('sale/list', ['sales' => $sales,'trash'=> $trash]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
@@ -192,9 +206,10 @@ class SaleController extends Controller
      */
     public function destroy($id){
         if(Session::get('login') && (Session('type') == 1)){
-        $detailorder = SaleDetail::where('nota_id','=',$id)->delete();
-        $sale = Sale::where('nota_id','=',$id)->first();
-        $sale->delete();
+            $detailorder = SaleDetail::where('nota_id','=',$id)->delete();
+
+            $sale = Sale::where('nota_id','=',$id)->first();
+            $sale->delete();
         return redirect()->route('sale.index')->with('deleted',$id);
         }
         else{

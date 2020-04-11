@@ -3,6 +3,12 @@
 @section('Judul','Data Kategori')
 @section('judultable','Kategori')
 
+@section('tambahstyle')
+div.dataTables_wrapper div.dataTables_filter input {
+  width:700px;
+}
+@endsection
+
 @if(session('type') == 4)
   @section('btn-insert')
   <a href="{{ route('categories.create') }}">
@@ -21,13 +27,9 @@
 @section('data')
 
 @foreach($categories as $c)
-<tr>
+<tr id="row{{$c->category_id}}">
   <td>
-    @if(($c -> status) == 0)
-    <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-secondary">Nonaktif</span></h5>
-    @else
     <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-success">Aktif</span></h5>
-    @endif
   </td>
 	<td>{{ $c -> category_id }}</td>
 	<td>{{ $c -> category_name }}</td>
@@ -47,25 +49,20 @@
   </td>
 </tr>
 @endforeach
-
 @endsection
 
-@section('data')
+@section('dataTrash')
 
-@foreach($categories as $c)
-<tr>
+@foreach($trash as $c)
+<tr id="trash{{$c->category_id}}">
   <td>
-    @if(($c -> status) == 0)
     <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-secondary">Nonaktif</span></h5>
-    @else
-    <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-success">Aktif</span></h5>
-    @endif
   </td>
   <td>{{ $c -> category_id }}</td>
   <td>{{ $c -> category_name }}</td>
   <td>
     @if(session('type') == 1)
-    @include('restorebtn', 
+    @include('updatebtn', 
     array(
     'id' => $c -> category_id,
     'dellink' => 'categories',
@@ -146,7 +143,8 @@ $(document).ready(function(){
               {name: 'category_name', orderable: true, width:'60%'},
               {name: 'action', orderable: false, searchable: false, width:'20%'},
            ],
-    order: [[0, 'desc']]
+    order: [[0, 'desc']],
+    lengthChange: false,
   });
  $('.switch').change(function(){
     var id = $(this).attr('id');
