@@ -123,29 +123,29 @@
 				</div>
 				<div class="row">
 					<div class="col-4" style="margin-bottom: 10px; padding-left: 0px;">
-					    @field
-						    @slot('icon') my_location @endslot
-						    @slot('type') password @endslot
-						    @slot('onkey') @endslot
-						    @slot('name') password @endslot
-						    @slot('req') true @endslot
-						    @slot('maxl') 8 @endslot
-						    @slot('max') 8 @endslot
-						    @slot('value') @endslot
-						    @slot('label') Password @endslot
-						    @slot('err') 
-						    	@error('password') mdc-text-field--invalid @enderror 
-						    @endslot
-							@slot('help') 
-								@if ($errors->has('password'))
+					    <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon mdc-text-field--with-trailing-icon @error('password') mdc-text-field--invalid @enderror" style="width: 100%;">
+						  <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading">lock</i>
+						  <i class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing" id="ticon" style="cursor: pointer;">visibility_off</i>
+						  <input type="password" class="mdc-text-field__input" aria-labelledby="my-label-id" name="password" maxlength="8" id="password">
+						  <div class="mdc-notched-outline">
+						   <div class="mdc-notched-outline__leading"></div>
+						    <div class="mdc-notched-outline__notch">
+						      <span class="mdc-floating-label" id="my-label-id">Password</span>
+						    </div>
+						    <div class="mdc-notched-outline__trailing"></div>
+						  </div>
+						</label>
+						<div class="mdc-text-field-helper-line">
+						  <div class="mdc-text-field-helper-text @error('password','mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg') @enderror" id="my-helper-id" aria-hidden="true">
+						    @if ($errors->has('password'))
 						      	Password harus diisi
-						    	@else
+						    @else
 						      	Masukkan password
-						    	@endif
-						    @endslot
-						    @slot('err2') @error('password','mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg') @enderror @endslot
-						    @slot('char') 0 / 8 @endslot
-					    @endfield
+						    @endif
+						  </div>
+						  <div class="mdc-text-field-character-counter">0 / 8</div>
+						</div>
+					    
 					</div>
 				</div>
 					<h6 class="m-10 font-italic text-danger">(*) Wajib diisi</h3>

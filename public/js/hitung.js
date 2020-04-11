@@ -27,7 +27,7 @@
       console.log("masuk getTotal");
       var jumlahs = document.getElementsByClassName("quantity");
       var prices = document.getElementsByClassName("selling_price");
-
+      
       var i;
       var total_p = 0;
       for (i = 0; i < jumlahs.length; ++i) {

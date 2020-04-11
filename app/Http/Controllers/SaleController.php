@@ -210,7 +210,17 @@ class SaleController extends Controller
 
             $sale = Sale::where('nota_id','=',$id)->first();
             $sale->delete();
-        return redirect()->route('sale.index')->with('deleted',$id);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
+    }
+
+    public function restore($id){
+        if(Session::get('login') && (Session('type') == 1)){
+            $detailorder = SaleDetail::where('nota_id','=',$id)->restore();
+            $sale = Sale::where('nota_id','=',$id)->restore();
+        return redirect()->route('sale.index')->with('restored',$id);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');

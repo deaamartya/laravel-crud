@@ -16,6 +16,7 @@ Route::get('product/delete/{id}','ProductController@destroy');
 Route::get('product/restore/{id}','ProductController@restore');
 
 Route::get('sale/delete/{id}','SaleController@destroy');
+Route::get('sale/restore/{id}','SaleController@restore');
 Route::get('user/delete/{id}','UserController@destroy');
 
 Route::get('categories/updateStatus/{id}','CategoryController@updateStatus');
