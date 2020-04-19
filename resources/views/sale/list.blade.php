@@ -53,6 +53,7 @@
     </div>
     <div class="card-body">
       <div class="row align-items-center my-3 pl-3">
+        @if(session('type') == 1)
         <div class="col-1 mr-3">
           <div class="pretty p-icon p-curve">
               <input type="checkbox" id="parentA" />
@@ -62,9 +63,11 @@
               </div>
           </div>
         </div>
-        <div class="col-1">
+        @else
+        <div class="col-2">
           #
         </div>
+        @endif
         <div class="col-2">
           Nama Customer
         </div>
@@ -83,9 +86,10 @@
       </div>
       <div class="accordion mt-4" id="accordionTable">
       @foreach($sales as $c)
-          <div class="card z-depth-0 shadowrow mb-4">
+          <div class="card z-depth-0 shadowrow mb-4" onclick="card({{ $c -> nota_id }})" id="{{ $c -> nota_id }}">
             <div class="card-body bg-light" id="heading{{ $c -> nota_id }}">
               <div class="row align-items-center my-1 pl-3">
+                @if(session('type') == 1)
                 <div class="col-1">
                   <div class="pretty p-icon p-curve">
                       <input type="checkbox" class="childcheck" id="check{{$c->nota_id}}"/>
@@ -95,7 +99,8 @@
                       </div>
                   </div>
                 </div>
-                <div class="col-1">
+                @endif
+                <div class="col-2">
                   <span class="align-middle">{{ $c -> nota_id }}</span>
                 </div>
                 <div class="col-2">
@@ -140,7 +145,7 @@
                       x<span class="quantity{{ $c -> nota_id }}">{{ $d -> quantity }}</span>
                     </td>
                     <td width="5%">
-                      <input type="hidden" value="{{$d->discount}}" class="discount{{ $c -> nota_id }}">
+                      <input type="hidden" value="{{$d->discount}}" id="" class="discount{{ $c -> nota_id }}">
                       @if($d->discount != "0")
                       <span style="color: #cc0000">
                          <?php echo (($d->discount/($d->selling_price*$d->quantity))*100)."%"; ?>
@@ -162,7 +167,11 @@
                 </div>
                 <div class="row justify-content-end px-12 my-2">
                   <div class="col-3 totals">Total Diskon</div>
-                  <div class="col-2 price totals" id="total_disc{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
+                  <div class="col-2 price totals" id="total_discount{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
+                  </div>
+                <div class="row justify-content-end px-12 my-2">
+                  <div class="col-3 totals">Pajak(10%)</div>
+                  <div class="col-2 price totals" id="total_tax{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
                   </div>
                 <div class="row justify-content-end px-12 my-2">
                   <div class="col-3 total">Total Payment</div>
@@ -174,6 +183,7 @@
           </div>
         @endforeach
     </div>
+    @if(session('type') == 1)
     <div class="row pl-3">
       <div class="col-1 mr-4">
         <div class="pretty p-icon p-curve">
@@ -193,7 +203,12 @@
         </button>
       </div>
     </div>
+    @endif
+      <div class="row justify-content-end pr-3">
+    {{$sales->links()}}
   </div>
+  </div>
+
 </div>
 <div class="card shadow mb-4">
   <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -298,6 +313,14 @@
       console.log("masuk else");
     }
   }
+  function card(id){
+    if($('#check'+id).is(":checked")){
+      $('#check'+id).prop("checked",false);
+    }
+    else{
+      $('#check'+id).prop("checked",true);
+    }
+  }
   $(document).ready(function(){
 
     $("#parentB").click(function(){
@@ -332,7 +355,11 @@
 
     for(var i=0;i<sales.length;i++){
       getTotal(sales[i]["nota_id"]);
+      console.log("selesai getTotal")
     }
+    $(".shadowrow").each(function(){
+        getTotal($(this).attr('id'));
+      });
 
     function getTotal(id){
       var qty = document.getElementsByClassName("quantity"+id);
@@ -344,14 +371,15 @@
         // console.log(subtotal);
       }
       // console.log(subtotal);
+      $("#total_tax"+id).html(10/100*subtotal);
       $("#subtotal"+id).html(subtotal);
       var disc = document.getElementsByClassName("discount"+id);
       var total_disc=0;
       for (var i = disc.length - 1; i >= 0; i--) {
         total_disc += (parseInt(disc[i].value));
       }
-      // console.log(total_disc);
-      $("#total_disc"+id).html(total_disc);
+      console.log(total_disc);
+      $("#total_discount"+id).html(total_disc);
     }
 
     $('.price').each(function(){

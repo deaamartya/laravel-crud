@@ -40,9 +40,9 @@ class ProductController extends Controller
     public function create()
     {
         if(Session::get('login') && (Session('type') == 4)){
-        $categories = Category::where('status',1)->get();
-        return view('product/form', ['categories' => $categories]);
-    }
+            $categories = Category::where('status',1)->get();
+            return view('product/form', ['categories' => $categories]);
+        }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
         }
@@ -153,6 +153,26 @@ class ProductController extends Controller
         $product->restore();
 
         return redirect()->route('product.index')->with('edited',$id);
+        }
+        else{
+            return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
+        }
+    }
+
+    public function filterbyCat($id){
+        if(Session::get('login') && (Session('type') == 3)){
+            if($id != "0"){
+                $product = Product::select('product.*','categories.category_name')
+                ->join('categories','categories.category_id','=','product.category_id')
+                ->where('product.category_id',$id)
+                ->get();
+            }
+            else{
+                $product = Product::select('product.*','categories.category_name')
+                ->join('categories','categories.category_id','=','product.category_id')
+                ->get();
+            }
+            return response()->json(['success' => true,'product' => $product]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');

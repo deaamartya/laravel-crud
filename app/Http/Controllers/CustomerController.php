@@ -39,6 +39,11 @@ class CustomerController extends Controller
         }
     }
 
+    public function getData($id){
+        $customer = Customer::find($id);
+        return response()->json(['success' => true,'customer' => $customer]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

@@ -13,4 +13,5 @@ class Customer extends Model
     	'first_name','last_name','phone','email','street','city','state','zip_code'
     ];
     protected $primaryKey = 'customer_id';
+    public $incrementing = false;
 }

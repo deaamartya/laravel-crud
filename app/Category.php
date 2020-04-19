@@ -11,4 +11,5 @@ class Category extends Model
 	protected $table = 'categories';
     protected $fillable = ['category_id','category_name','status'];
     protected $primaryKey = 'category_id';
+    public $incrementing = false;
 }

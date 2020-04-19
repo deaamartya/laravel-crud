@@ -5,6 +5,14 @@ Route::resource('product', 'ProductController');
 Route::resource('sale', 'SaleController');
 Route::resource('saledet', 'SaleDetailController');
 Route::resource('user', 'UserController');
+Route::get('product/filterbyCat/{id}','ProductController@filterbyCat');
+Route::get('customer/getData/{id}','CustomerController@getData');
+
+Route::post('sale/create/step1','SaleController@storeStep1');
+
+Route::get('sale/create/step2','SaleController@createStep2');
+Route::get('sale/edit/step1','SaleController@editStep1');
+// Route::post('sale/create/step2','SaleController@storeStep2');
 
 Route::get('categories/getdata', 'CategoryController@getCategory')->name('categories.getdata');
 
