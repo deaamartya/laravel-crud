@@ -33,6 +33,14 @@
     vertical-align: bottom;
     border-bottom: 0px;
     }
+    .sidebar .nav-item .nav-link i {
+      font-size: 1.2rem;
+      margin-right: .25rem;
+    }
+    .sidebar .nav-item .nav-link span {
+      font-size: 1rem;
+      margin-right: .25rem;
+    }
     @yield('tambahstyle')
   </style>
 	@yield('headlink')
@@ -44,71 +52,50 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/home')}}">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-laugh-wink"></i>
+        <div class="sidebar-brand-icon">
+          <i class="fas fa-store"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">CRUD</div>
+        <div class="sidebar-brand-text mx-3">dedstore</div>
       </a>
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
       <!-- Nav Item - Dashboard -->
-      <li class="nav-item">
+      <li class="nav-item mt-3">
         <a class="nav-link" href="{{ url('/home')}}">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <i class="fas fa-fw fa-chart-line"></i>
           <span>Dashboard</span></a>
       </li>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Data
-      </div>
-
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-          <i class="fas fa-fw fa-cog"></i>
-          <span>Master</span>
-        </a> 
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            @if(session('type') == 4 || ((session('type') == 2) || (session('type') == 1)))
-            <a class="collapse-item" href="{{ route('categories.index') }}">Kategori</a>
-            <a class="collapse-item" href="{{ url('product') }}">Produk</a>
-            @endif
-            @if((session('type') == 2) || (session('type') == 1))
-            <a class="collapse-item" href="{{ url('user') }}">User</a>
-            @endif
-            @if(session('type') == 2 || ((session('type') == 3) || (session('type') == 1)))
-            <a class="collapse-item" href="{{ url('customer') }}">Customer</a>
-            @endif
-          </div>
-        </div>
+        @if(session('type') == 4 || ((session('type') == 2) || (session('type') == 1)))
+            <a class="nav-link mt-3" href="{{ route('categories.index') }}">
+                <i class="fas fa-fw fa-bookmark"></i>
+                <span class="">Kategori</span>
+            </a>
+            <a class="nav-link mt-3" href="{{ url('product') }}">
+                <i class="fas fa-fw fa-box-open"></i>
+                <span class="">Produk</span>
+            </a>
+        @endif
+        @if((session('type') == 2) || (session('type') == 1))
+            <a class="nav-link mt-3" href="{{ url('user') }}"><i class="fas fa-fw fa-user-circle"></i>
+                <span class="">User</span></a>
+        @endif
+        @if(session('type') == 2 || ((session('type') == 3) || (session('type') == 1)))
+            <a class="nav-link mt-3" href="{{ url('customer') }}">
+              <i class="fas fa-fw fa-user-tag"></i>
+                <span class="">Customer</span>
+            </a>
+            <a class="nav-link mt-3" href="{{url('sale')}}">
+              <i class="fas fa-fw fa-cart-plus"></i>
+                <span class="">Penjualan</span>
+              </a>
+        @endif
       </li>
-
-      @if(session('type') == 2 || ((session('type') == 3) || (session('type') == 1)))
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-          <i class="fas fa-fw fa-wrench"></i>
-          <span>Transaksi</span>
-        </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="{{url('sale')}}">Penjualan</a>
-          </div>
-        </div>
-      </li>
-      @endif
-
-      <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
-
       <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
+      <div class="text-center d-none d-md-inline mt-3">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
       </div>
-
     </ul>
     <!-- End of Sidebar -->
 
@@ -127,22 +114,20 @@
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
-            <div class="topbar-divider d-none d-sm-block"></div>
+            
 
             <!-- Nav Item - User Information -->
-            <li class="nav-item dropdown no-arrow">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Welcome Back, {{ @session('name') }} {{@session('last_name') }}</span>
+            <li class="nav-item ">
+              <a class="nav-link">
+                <span class="mr-2 d-none d-lg-inline text-gray-600">Welcome Back, {{ @session('name') }} {{@session('last_name') }}</span>
                 <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
               </a>
-              <!-- Dropdown - User Information -->
-              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item logout-confirm" href="{{ url('/logout')}}">
-                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Logout
-                </a>
-              </div>
             </li>
+            <div class="topbar-divider d-none d-sm-block"></div>
+            <li class="nav-item"><a class="nav-link logout-confirm" href="{{ url('/logout')}}" style="color: black;">
+              <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2"></i>
+              Logout
+            </a></li>
 
           </ul>
 
@@ -173,9 +158,6 @@
   <script src="{{ asset('/admin/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
   <script src="{{ asset('/admin/js/sb-admin-2.min.js')}}"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-  <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
   <script>
   $('.logout-confirm').on('click', function (e) {
     event.preventDefault();

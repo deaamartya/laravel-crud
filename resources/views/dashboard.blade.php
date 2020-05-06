@@ -36,10 +36,10 @@
 	          <div class="row no-gutters align-items-center">
 	            <div class="col mr-2">
 	              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">total Produk Terjual</div>
-	              <div class="h5 mb-0 font-weight-bold text-gray-800"><span class="counter" id="productsale">56</span></div>
+	              <div class="h5 mb-0 font-weight-bold text-gray-800"><span class="counter" id="productsale">0</span></div>
 	            </div>
 	            <div class="col-auto">
-	              <i class="fas fa-calendar fa-2x text-gray-300"></i>
+	              <i class="fas fa-truck-loading fa-2x text-gray-300"></i>
 	            </div>
 	          </div>
 	        </div>
@@ -54,7 +54,7 @@
 	              <div class="h5 mb-0 font-weight-bold text-gray-800" id="monproductsale">0</div>
 	            </div>
 	            <div class="col-auto">
-	              <i class="fas fa-calendar fa-2x text-gray-300"></i>
+	              <i class="fas fa-boxes fa-2x text-gray-300"></i>
 	            </div>
 	          </div>
 	        </div>
@@ -116,7 +116,7 @@
         <!-- Card Header - Dropdown -->
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
           <h6 class="m-0 font-weight-bold text-primary">Grafik Penjualan</h6>
-          <a href="{{ url('/sales/print-pdf') }}"><button type="button" class="btn btn-primary">Download Laporan</button></a>
+          <a href="{{ url('/sales/print-pdf') }}"><button type="button" class="btn btn-primary"><i class="fas fa-download mr-2"></i>Download Laporan</button></a>
         </div>
         <!-- Card Body -->
         <div class="card-body">
@@ -233,10 +233,7 @@
 @section('bottom')
   <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
   <script src="{{asset('/js/jquery.nice-select.js')}}"></script>
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script> -->
-  <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script> -->
   <script src="{{asset('/admin/vendor/chart.js/Chart.min.js')}}"></script>
-  <!-- <script src="/js/counterUp.js"></script> -->
   <script>
     var baseurl = '{{URL::to('')}}';
     $(document).ready(function() {
