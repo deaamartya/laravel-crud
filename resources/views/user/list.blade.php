@@ -43,6 +43,27 @@
 </tr>
 @endforeach
 @endsection
+
+@section('dataTrash')
+@foreach($trash as $c)
+<tr id="trash{{$c->category_id}}">
+  <td>{{ $c->user_id }}</td>
+  <td>{{ $c->first_name }} {{ $c->last_name }}</td>
+  <td>0{{ $c->phone }}</td>
+  <td>{{ $c->email }}</td>
+  <td>{{ $c->nama_job }}</td>
+  <td>
+      @if(session('type') == 1)
+      @include('restorebtn', 
+      array(
+      'id' => $c -> user_id,
+      'dellink' => 'user'))
+      @endif
+  </td>
+</tr>
+@endforeach
+@endsection
+
 @section('tambahankonten')
   @if(session('deleted'))
     <script>
@@ -66,7 +87,16 @@
     <script>
       Swal.fire(
         'Edit Success!',
-        "Data user dengan ID {{ @session('edited') }} berhasil diubah",
+        "User dengan ID {{ @session('edited') }} berhasil diubah",
+        'success'
+      )
+    </script>
+  @endif
+  @if(session('restore'))
+    <script>
+      Swal.fire(
+        'Restore Success!',
+        "User {{ @session('restore') }} berhasil dikembalikan",
         'success'
       )
     </script>
@@ -79,11 +109,22 @@
     $('#dataTable').dataTable({
        columns: [
                 {name: 'user_id', width:'5%'},
+                {name: 'first_name', width:'25%'},
+                {name: 'phone', width:'15%'},
+                {name: 'email', width:'15%'},
+                {name: 'nama_job', width:'15%'},
+                {name: 'action', orderable: false, searchable: false, width:'25%'},
+             ],
+      order: [[0, 'asc']]
+    });
+    $('#trashTable').dataTable({
+       columns: [
+                {name: 'user_id', width:'10%'},
                 {name: 'first_name', width:'30%'},
                 {name: 'phone', width:'15%'},
                 {name: 'email', width:'15%'},
-                {name: 'nama_job', width:'10%'},
-                {name: 'action', orderable: false, searchable: false, width:'25%'},
+                {name: 'nama_job', width:'15%'},
+                {name: 'action', orderable: false, searchable: false, width:'15%'},
              ],
       order: [[0, 'asc']]
     });

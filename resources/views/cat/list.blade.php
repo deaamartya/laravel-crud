@@ -18,19 +18,14 @@ div.dataTables_wrapper div.dataTables_filter input {
 @endif
 
 @section('header')
-<th>Status</th>
   <th>ID</th>
   <th>Name</th>
-  
 @endsection
 
 @section('data')
 
 @foreach($categories as $c)
 <tr id="row{{$c->category_id}}">
-  <td>
-    <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-success">Aktif</span></h5>
-  </td>
 	<td>{{ $c -> category_id }}</td>
 	<td>{{ $c -> category_name }}</td>
   <td>
@@ -40,11 +35,10 @@ div.dataTables_wrapper div.dataTables_filter input {
       'editlink' => 'categories.edit',
       'id' => $c -> category_id))
     @elseif(session('type') == 1)
-    @include('updatebtn', 
+    @include('delbtn', 
     array(
     'id' => $c -> category_id,
-    'dellink' => 'categories',
-    'status' => $c -> status))
+    'dellink' => 'categories'))
     @endif
   </td>
 </tr>
@@ -52,21 +46,16 @@ div.dataTables_wrapper div.dataTables_filter input {
 @endsection
 
 @section('dataTrash')
-
 @foreach($trash as $c)
 <tr id="trash{{$c->category_id}}">
-  <td>
-    <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-secondary">Nonaktif</span></h5>
-  </td>
   <td>{{ $c -> category_id }}</td>
   <td>{{ $c -> category_name }}</td>
   <td>
     @if(session('type') == 1)
-    @include('updatebtn', 
+    @include('restorebtn', 
     array(
     'id' => $c -> category_id,
-    'dellink' => 'categories',
-    'status' => $c -> status))
+    'dellink' => 'categories'))
     @endif
   </td>
 </tr>
@@ -102,10 +91,20 @@ div.dataTables_wrapper div.dataTables_filter input {
       )
     </script>
   @endif
+  @if(session('restore'))
+    <script>
+      Swal.fire(
+        'Restore Success!',
+        "Kategori {{ @session('restore') }} berhasil dikembalikan",
+        'success'
+      )
+    </script>
+  @endif
 @endsection
 
 @section('bottomlink')
 <script>
+  console.log(<?php echo $trash ?>);
 function submit(id){
   document.getElementById("switch"+id).submit();
 }
@@ -138,36 +137,43 @@ $(document).ready(function(){
   var SITEURL = '{{URL::to('')}}';
   $('#dataTable').dataTable({
      columns: [
-              {name: 'status', orderable: true, width:'10%'},
-              {name: 'category_id', searchable: false, width:'10%'},
-              {name: 'category_name', orderable: true, width:'60%'},
+              {name: 'category_id', width:'15%'},
+              {name: 'category_name', width:'65%'},
               {name: 'action', orderable: false, searchable: false, width:'20%'},
            ],
-    order: [[0, 'desc']],
-    lengthChange: false,
+    order: [[0, 'desc']]
   });
- $('.switch').change(function(){
-    var id = $(this).attr('id');
-    var baseurl = '{{URL::to('')}}';
-    $.ajax({
-        url: baseurl+'/categories/updateStatus/'+id,
-        method: 'GET',
-        success: function(data) {
-          Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Kategori '+data.name+' berhasil di update',
-            showConfirmButton: false,
-            timer: 1200
-          });
-          $("#badgestatus"+data.id).html(data.html);
-          $("#label"+data.id).html(data.label);
-        },
-        error: function(data) {
-          console.log(data);
-        }
-    });
+  $('#trashTable').dataTable({
+     columns: [
+              {name: 'category_id', width:'15%'},
+              {name: 'category_name', width:'65%'},
+              {name: 'action', orderable: false, searchable: false, width:'20%'},
+           ],
+    order: [[1, 'desc']]
   });
+ // $('.switch').change(function(){
+ //    var id = $(this).attr('id');
+ //    var baseurl = '{{URL::to('')}}';
+ //    $.ajax({
+ //        url: baseurl+'/categories/updateStatus/'+id,
+ //        method: 'GET',
+ //        success: function(data) {
+ //          Swal.fire({
+ //            position: 'center',
+ //            icon: 'success',
+ //            title: 'Kategori '+data.name+' berhasil di update',
+ //            showConfirmButton: false,
+ //            timer: 1200
+ //          });
+ //          // $("#badgestatus"+data.id).html(data.html);
+ //          // $("#label"+data.id).html(data.label);
+ //          window.location.href = baseurl+'/categories';
+ //        },
+ //        error: function(data) {
+ //          console.log(data);
+ //        }
+ //    });
+ //  });
 });
 </script>
 @endsection

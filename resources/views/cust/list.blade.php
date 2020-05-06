@@ -12,7 +12,6 @@
 @endif
 
 @section('header')
-  <th>Status</th>
   <th>ID</th>
   <th>Name</th>
   <th>Phone</th>
@@ -24,13 +23,6 @@
 
 @foreach($customers as $c)
 <tr>
-  <td>
-    @if(($c -> status) == 0)
-    <h5 id="badgestatus{{ $c -> customer_id }}"><span class="badge badge-secondary">Nonaktif</span></h5>
-    @else
-    <h5 id="badgestatus{{ $c -> customer_id }}"><span class="badge badge-success">Aktif</span></h5>
-    @endif
-  </td>
 	<td>{{ $c->customer_id }}</td>
 	<td>{{ $c->first_name }} {{ $c->last_name }}</td>
 	<td>0{{ $c->phone }}</td>
@@ -43,15 +35,42 @@
       'editlink' => 'customer.edit',
       'id' => $c -> customer_id))
     @elseif(session('type') == 1)
-    @include('updatebtn', 
+    @include('delbtn', 
     array(
     'id' => $c -> customer_id,
-    'dellink' => 'customer',
-    'status' => $c -> status))
+    'dellink' => 'customer'))
     @endif
   </td>
 </tr>
 @endforeach
+
+@endsection
+
+@section('dataTrash')
+
+@foreach($trash as $c)
+<tr>
+  <td>{{ $c->customer_id }}</td>
+  <td>{{ $c->first_name }} {{ $c->last_name }}</td>
+  <td>0{{ $c->phone }}</td>
+  <td>{{ $c->email }}</td>
+  <td>{{ $c->street }} {{ $c->city }}, {{ $c->state }}, {{ $c->zip_code }}</td>
+  <td>
+    @if(session('type') == 3)
+      @include('editbtn', 
+      array(
+      'editlink' => 'customer.edit',
+      'id' => $c -> customer_id))
+    @elseif(session('type') == 1)
+    @include('restorebtn', 
+    array(
+    'id' => $c -> customer_id,
+    'dellink' => 'customer'))
+    @endif
+  </td>
+</tr>
+@endforeach
+
 @endsection
 
 @section('tambahankonten')
@@ -77,7 +96,16 @@
     <script>
       Swal.fire(
         'Edit Success!',
-        "Data customer dengan ID {{ @session('edited') }} berhasil diubah",
+        "Customer dengan ID {{ @session('edited') }} berhasil diubah",
+        'success'
+      )
+    </script>
+  @endif
+  @if(session('restore'))
+    <script>
+      Swal.fire(
+        'Restore Success!',
+        "Customer {{ @session('restore') }} berhasil dikembalikan",
         'success'
       )
     </script>
@@ -115,15 +143,25 @@ $(document).ready(function(){
   var SITEURL = '{{URL::to('')}}';
   $('#dataTable').dataTable({
     columns: [
-              {name: 'status',width: '3%'},
-              {name: 'customer_id',width: '1%'},
+              {name: 'customer_id'},
               {name: 'first_name'},
               {name: 'phone'},
               {name: 'email'},
               {name: 'street'},
               {name: 'action', orderable: false, searchable: false},
               ],
-    order: [[0, 'asc']],
+    order: [[0, 'desc']],
+  });
+  $('#trashTable').dataTable({
+    columns: [
+              {name: 'customer_id'},
+              {name: 'first_name'},
+              {name: 'phone'},
+              {name: 'email'},
+              {name: 'street'},
+              {name: 'action', orderable: false, searchable: false},
+              ],
+    order: [[0, 'desc']],
   });
  $('.switch').change(function(){
     var id = $(this).attr('id');

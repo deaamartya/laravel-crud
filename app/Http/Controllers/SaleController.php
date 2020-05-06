@@ -11,6 +11,7 @@ use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use DB;
+use PDF;
 
 class SaleController extends Controller
 {
@@ -25,7 +26,7 @@ class SaleController extends Controller
             $sales = Sale::select(DB::raw('CONCAT(customer.first_name," ",COALESCE(customer.last_name, "")) AS c_fullname'),(DB::raw('CONCAT(user.first_name," ",user.last_name) AS u_fullname')),'sales.*')
                 ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
                 ->join('user', 'user.user_id', '=', 'sales.user_id')
-                ->paginate(5);
+                ->paginate(10);
                 $i=0;
             foreach($sales as $s) {
                 $sales[$i]["detail"] = SaleDetail::where('nota_id',$s->nota_id)
@@ -34,14 +35,7 @@ class SaleController extends Controller
                 ->get();
                 $i++;
             }
-
-            $trash = Sale::onlyTrashed()
-                ->select(DB::raw('CONCAT(customer.first_name," ",COALESCE(customer.last_name, "")) AS c_fullname'),(DB::raw('CONCAT(user.first_name," ",user.last_name) AS u_fullname')),'sales.*')
-                ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
-                ->join('user', 'user.user_id', '=', 'sales.user_id')
-                ->get();
-            // dump($sales);
-            return view('sale/list', ['sales' => $sales,'trash'=> $trash]);
+            return view('sale/list', ['sales' => $sales]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
@@ -55,56 +49,31 @@ class SaleController extends Controller
      */
     public function create(Request $request)
     {
-        // if(Session::get('login') && (Session('type') == 3)){
-        // $user = User::all();
-        // $customer = Customer::all();
-        // $product = Product::all();
-        // $nota_id = (DB::table('sales')->max('nota_id'))+1;
-        // return view('/sale/cart2',['users' => $user, 'customers' => $customer,'product' => $product,'nota_id' => $nota_id]);
-        // }
-        // else{
-        //     return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
-        // }
-
         if(Session::get('login') && (Session('type') == 3)){
+
             $saledetails = $request->session()->get('saledetails');
-            // if($request->session()->has('saledetails')){
-            //     $saledetails = $request->session()->get('saledetails');
-            //     $s = $request->session()->get('saledetails');
-            //     foreach ($s as $key) {
-                    
-            //     }
+            $product = Product::select('product.*','categories.category_name')
+                ->join('categories','product.category_id','=','categories.category_id')
+                ->get();
+            $categories = Category::all();
 
-            //     $product = Product::select('product.*','categories.category_name')
-            //     ->join('categories','product.category_id','=','categories.category_id')
-            //     ->get();
-            //     $categories = Category::all();
-            //     $nota_id = $request->session()->get('nota_id');
-            //     return view('sale/edit1',compact('saledetails', $saledetails),['product' => $product,'categories' => $categories,'nota_id' => $nota_id]);
-            // }
-            // else{
-                $product = Product::select('product.*','categories.category_name')
-                    ->join('categories','product.category_id','=','categories.category_id')
-                    ->get();
-                $categories = Category::all();
+            $max = DB::table('sales')->max('nota_id');
+            date_default_timezone_set('Asia/Jakarta');
+            $date = date("ymd", time());
+            $maxday = substr($max,0,6);
+            $max = substr($max,6);
 
-                $max = DB::table('sales')->max('nota_id');
-                date_default_timezone_set('Asia/Jakarta');
-                $date = date("ymd", time());
-                $maxday = substr($max,0,6);
-                $max = substr($max,6);
+            if($maxday == $date){
+                $nota_id = $date.str_pad($max+1,4,"0",STR_PAD_LEFT);
+            }
 
-                if($maxday == $date){
-                    $nota_id = $date.str_pad($max+1,4,"0",STR_PAD_LEFT);
-                }
+            else{
+                $nota_id = $date.str_pad(1,4,"0",STR_PAD_LEFT);
+            }
 
-                else{
-                    $nota_id = $date.str_pad(1,4,"0",STR_PAD_LEFT);
-                }
+            $user_id = Session::get('user_id');
 
-                $user_id = Session::get('user_id');
-
-                return view('/sale/cart',compact('saledetails'),['product' => $product,'nota_id' => $nota_id,'user_id'=>$user_id,'categories'=>$categories]);
+            return view('/sale/cart',compact('saledetails'),['product' => $product,'nota_id' => $nota_id,'user_id'=>$user_id,'categories'=>$categories]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
@@ -113,35 +82,42 @@ class SaleController extends Controller
 
     public function storeStep1(Request $request){
         if(Session::get('login') && (Session('type') == 3)){
-            
-                $sale = new Sale;
-                $sale->user_id = $request->user_id;
-                $sale->nota_id = $request->nota_id;
-                $sale->status = 1;
-                $sale->total_payment = $request->total_payment;
 
-                $saledetails;
-                foreach($request->product_id as $key){
-                    $detailorder = new SaleDetail;
-                    $detailorder->nota_id = $request['nota_id'];
-                    $detailorder->product_id = $key;
-                    $detailorder->quantity = $request['jumlah'][$key];
-                    $detailorder->selling_price = $request['selling_price'][$key];
-                    $detailorder->discount = $request['discount'][$key];
-                    $detailorder->total_price = $request['total'][$key];
-                    $detailorder->status=1;
-                    $saledetails[$key] = $detailorder;
-
-                    $detailproduk = Product::find($key);
-                    $saledetails[$key]["product_name"] = $detailproduk->product_name;
+            $sale = new Sale;
+            $sale->user_id = $request->user_id;
+            $sale->nota_id = $request->nota_id;
+            $sale->status = 1;
+            $sale->total_payment = $request->total_payment;
+            if(Session::get('sale')){
+                $oldsale = Session::get('sale');
+                if($request->nota_date != null || $request->customer_id != null){
+                    if($request->nota_date != null){ $sale->nota_date = $oldsale->nota_date; }
+                    if($request->customer_id != null){ $sale->customer_id = $oldsale->customer_id; }
                 }
+            }
+
+            $saledetails;
+            foreach($request->product_id as $key){
+                $detailorder = new SaleDetail;
+                $detailorder->nota_id = $request['nota_id'];
+                $detailorder->product_id = $key;
+                $detailorder->quantity = $request['jumlah'][$key];
+                $detailorder->selling_price = $request['selling_price'][$key];
+                $detailorder->discount = $request['discount'][$key];
+                $detailorder->total_price = $request['total'][$key];
+                $detailorder->status=1;
+                $saledetails[$key] = $detailorder;
+
+                $detailproduk = Product::find($key);
+                $saledetails[$key]["product_name"] = $detailproduk->product_name;
+            }
 
             $request->session()->forget('saledetails');
             $request->session()->forget('sale');
             $request->session()->put('saledetails', $saledetails);
             $request->session()->put('sale', $sale);
 
-                // dump($saledetails);
+                // dump($sale);
                 // $request->session()->put('nota_id',$request->nota_id);
             
             // $nota_id = (DB::table('sales')->max('nota_id'))+1;
@@ -166,17 +142,20 @@ class SaleController extends Controller
         $saledetails = $request->session()->get('saledetails');
         $sale = $request->session()->get('sale');
         if($request->nota_date != null || $request->customer_id != null){
+            if($request->nota_date != null){ $replace_sale->nota_date = $request->nota_date; }
+            if($request->customer_id != null){ $replace_sale->customer_id = $request->customer_id; }
+            $replace_sale->user_id = $sale->user_id;
+            $replace_sale->total_payment = $sale->total_payment;
             $request->session()->forget('sale');
-            if($request->nota_date != null){ $sale->nota_date = $request->nota_date; }
-            if($request->customer_id != null){ $sale->customer_id = $request->customer_id; }
-            $request->session()->put('sale',$sale);
+            $request->session()->put('sale',$replace_sale);
         }
         $product = Product::select('product.*','categories.category_name')
                     ->join('categories','product.category_id','=','categories.category_id')
                     ->get();
         $categories = Category::all();
-        $nota_id = (DB::table('sales')->max('nota_id'))+1;
-        return view('/sale/cartedit',['saledetails' => $saledetails,'sale' => $sale,'product' => $product,'nota_id' => $nota_id,'categories'=>$categories]);
+        
+        // dump($sale);
+        return view('/sale/cartedit',['saledetails' => $saledetails,'sale' => $sale,'product' => $product,'categories'=>$categories]);
     }
 
     /**
@@ -188,7 +167,8 @@ class SaleController extends Controller
     public function store(Request $request){
         $request->validate(['customer_id' => 'required',
                         'nota_date' => 'required',
-                        'total_payment' => 'required']);
+                        'total_payment' => 'required',
+                        'user_id' => 'required']);
         if(Session::get('login') && (Session('type') == 3)){
             DB::transaction(function() use ($request){
                 
@@ -338,4 +318,59 @@ class SaleController extends Controller
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
         }
     }
+
+    public function getEarnings($tahun){
+        if(Session::get('login')){
+            $labels=DB::select("CALL getMonths()");
+            for($i=0;$i<count($labels);$i++){
+                $total=DB::select("SELECT getEarning('".$labels[$i]->namabulan."','".$tahun."') AS hasil");
+                // dump($total[0]->hasil);
+                $earning[$i]= $total[0]->hasil;
+                if($total[0]->hasil ==null){
+                    $earning[$i]=0;
+                }
+            }
+            $earning = array_slice($earning, 0,count($labels));
+            return response()->json(['earning' => $earning, 'labels' => $labels]);
+        }
+    }
+
+    public function getEarningBulan($month){
+        if(Session::get('login')){
+            $tahun = substr($month,0,4);
+            $bulan = substr($month,5,10);
+            $total=DB::select("SELECT getEarning('".$bulan."','".$tahun."') AS hasil");
+            $earning= $total[0]->hasil;
+            if($total[0]->hasil < 1){
+                $earning[$i]=0;
+            }
+            return response()->json(['earning' => $earning]);
+        }
+    }
+
+    public function getTopSell(){
+        if(Session::get('login')){
+            $top_cat=DB::select("CALL getTopSales()");
+            return response()->json(['top_cat' => $top_cat]);
+        }
+    }
+
+    public function getInfoSale(){
+        if(Session::get('login')){
+            $monthsale=DB::select("SELECT penjualanBulanIni() AS total");
+            $yearsale=DB::select("SELECT penjualanTahunIni() AS total");
+            $productsale=DB::select("SELECT totalProdukTerjual() AS total");
+            $monproductsale=DB::select("SELECT totalProdukTerjualBulanIni() AS total");
+            $sale=DB::select("SELECT totalPenjualan() AS total");
+            return response()->json(['monproductsale' => $monproductsale,'monthsale' => $monthsale,'yearsale' => $yearsale,'productsale' => $productsale,'sale' => $sale]);
+        }
+    }
+
+    public function printPDF(){
+        $sales = Sale::orderBy('nota_date')->get();
+        return view('pdf_view',['sales' => $sales]);
+        // $pdf = PDF::loadView('pdf_view', ['sales' => $sales]);  
+        // return $pdf->stream();
+    }
+    
 }

@@ -77,7 +77,7 @@
               </form>
             </div>
             <div class="col-5">
-                <div class="card shadow bg-dark text-white ml-3">
+                <div class="card shadow text-white ml-3" style="background-color: #344055">
                   <div class="card-body px-4 my-auto">
                       <div class="row pl-2 mb-3">
                         <h2 style="font-family: Montserrat; font-weight: 700;">Summary</h2>
@@ -127,7 +127,7 @@
                         </div>
                       </div>
                       <div class="row align-middle" style="margin-top: 20px;">
-                        <button onclick="$('#catForm').submit()" class="btn btn-info btn-lg mx-2" style="width: 100%; font-weight: bold;">Checkout</button>
+                        <button onclick="$('#catForm').submit()" class="btn btn-lg mx-2" style="width: 100%; font-weight: bold; background-color: #FF5E5B; color: white">Checkout</button>
                       </div>
                   </div>
                 </div>

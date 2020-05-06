@@ -12,7 +12,6 @@
 @endif
 
 @section('header')
-  <th>Status</th>
   <th>ID</th>
   <th>Kategori</th>
   <th>Nama Produk</th>
@@ -25,13 +24,6 @@
 
 @foreach($products as $c)
 <tr>
-  <td>
-    @if(($c -> status) == 0)
-    <h5 id="badgestatus{{ $c -> product_id }}"><span class="badge badge-secondary">Nonaktif</span></h5>
-    @else
-    <h5 id="badgestatus{{ $c -> product_id }}"><span class="badge badge-success">Aktif</span></h5>
-    @endif
-  </td>
 	<td>{{ $c -> product_id }}</td>
 	<td>{{ $c -> category_name }}</td>
   <td>{{ $c -> product_name }}</td>
@@ -45,7 +37,7 @@
       'editlink' => 'product.edit',
       'id' => $c -> product_id))
     @elseif(session('type') == 1)
-    @include('updatebtn', 
+    @include('delbtn', 
     array(
     'id' => $c -> product_id,
     'dellink' => 'product',
@@ -60,9 +52,6 @@
 
 @foreach($trash as $c)
 <tr>
-  <td>
-    <h5 id="badgestatus{{ $c -> category_id }}"><span class="badge badge-secondary">Nonaktif</span></h5>
-  </td>
   <td>{{ $c -> product_id }}</td>
   <td>{{ $c -> category_name }}</td>
   <td>{{ $c -> product_name }}</td>
@@ -111,24 +100,21 @@
       )
     </script>
   @endif
+  @if(session('restore'))
+    <script>
+      Swal.fire(
+        'Restore Success!',
+        "Produk {{ @session('restore') }} berhasil dikembalikan",
+        'success'
+      )
+    </script>
+  @endif
 @endsection
 
 @section('bottomlink')
 <script type="text/javascript" src="{{ asset('/js/autoNumeric.js') }}"></script>
 <script>
   $('#dataTable').dataTable({
-   columns: [
-            {name: 'product_id', width:'5%'},
-            {name: 'category_name', width:'10%'},
-            {name: 'product_name', width:'25%'},
-            {name: 'product_price', width:'15%'},
-            {name: 'product_stock', width:'10%'},
-            {name: 'explanation', width:'20%'},
-            {name: 'action', orderable: false, searchable: false, width:'15%'},
-         ],
-  order: [[0, 'asc']]
-  });
-  $('#dataTable1').dataTable({
      columns: [
               {name: 'product_id', width:'5%'},
               {name: 'category_name', width:'10%'},
@@ -138,9 +124,20 @@
               {name: 'explanation', width:'20%'},
               {name: 'action', orderable: false, searchable: false, width:'15%'},
            ],
-    order: [[0, 'asc']]
+    order: [[0, 'desc']]
   });
-    $('.price').autoNumeric('init', {aSep: '.', aDec: ',', aSign: 'Rp ', aPad: false, nBracket: '(,)', lZero: 'deny'});
+  $('#trashTable').dataTable({
+     columns: [
+              {name: 'product_id', width:'5%'},
+              {name: 'category_name', width:'10%'},
+              {name: 'product_name', width:'25%'},
+              {name: 'product_price', width:'15%'},
+              {name: 'product_stock', width:'10%'},
+              {name: 'explanation', width:'20%'},
+              {name: 'action', orderable: false, searchable: false, width:'15%'},
+           ],
+    order: [[1, 'desc']]
+  });
     
     $('.delete-confirm').on('click', function (e) {
       event.preventDefault();

@@ -24,6 +24,8 @@
     },
     "dependencies": {
         "@material/select": "^5.0.0",
-        "@material/textfield": "^5.0.0"
+        "@material/textfield": "^5.0.0",
+        "counterup2": "^1.0.4",
+        "countup.js": "^2.0.5"
     }
 }

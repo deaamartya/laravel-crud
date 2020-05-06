@@ -6,7 +6,6 @@
 <link href="https://cdn.datatables.net/searchpanes/1.0.1/css/searchpanes.dataTables.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <!-- <link rel="stylesheet" href="{{ asset('/alert/sweetalert2.min.css') }}"> -->
   <style type="text/css">
     .btn-group-sm > .btn-icon-split.btn .icon, .btn-icon-split.btn-sm .icon {
       padding: 2px 5px;
@@ -24,107 +23,118 @@
     th {
         text-align: inherit;
         background-color: transparent;
-        color: #5a5c69;
     }
     .totals{
       font-weight: bold;
-      color: #5a5c69;
+      color: white;
     }
     .total{
       font-weight: bold;
-      color: black;
+      color: white;
       font-size: 1.1rem;
+      padding-left: 30px;
     }
     .shadowrow {
       box-shadow: 0 .15rem .50rem 0 rgba(58,59,69,.15) !important;
+      border-radius: 13px;
+    }
+    .headsale{
+      background-color: #344055 !important;
+      color: white;
+    }
+    .table {
+      color: white;
+    }
+    th{
+      color: white;
+    }
+    .table th{
+      padding: .75rem;
+      vertical-align: top;
+      border: 0px;
+    }
+    .table td {
+      padding: .75rem;
+      vertical-align: top;
+      border-bottom: 1px solid #e3e6f0;
+    }
+    .totalcard{
+      background-color: #4E73DF;
+      border-radius: 28px;
+      padding: 10px;
+    }
+    .total_payment{
+      text-align: right;
+      padding-right: 30px;
+    }
+    .price{
+      text-align: right;
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 @endsection
 @section('konten')
-  <div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-      <h3 class="m-0 font-weight-bold text-primary">Data Penjualan</h3>
-        @if(session('type') == 3)
-          <a href="{{ route('sale.create') }}">
-            <button class="btn btn-primary">Tambah Penjualan</button>
-          </a>
-        @endif
+<div class="card shadow mb-4">
+  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <h3 class="m-0 font-weight-bold text-primary">Data Penjualan</h3>
+      @if(session('type') == 3)
+        <a href="{{ route('sale.create') }}">
+          <button class="btn btn-primary">Tambah Penjualan</button>
+        </a>
+      @endif
+  </div>
+  <div class="card-body">
+    <div class="row align-items-center my-3 pl-3">
+      <div class="col-2">
+        #
+      </div>
+      <div class="col-2">
+        Nama Customer
+      </div>
+      <div class="col-2 pr-0">
+        Nama User
+      </div>
+      <div class="col-2 pl-0 pr-0">
+        Tanggal Penjualan
+      </div>
+      <div class="col-3 pl-0 pr-0">
+        Total Pembelian
+      </div>
+      <div class="col-1 pl-0">
+        Detail
+      </div>
     </div>
-    <div class="card-body">
-      <div class="row align-items-center my-3 pl-3">
-        @if(session('type') == 1)
-        <div class="col-1 mr-3">
-          <div class="pretty p-icon p-curve">
-              <input type="checkbox" id="parentA" />
-              <div class="state">
-                  <i class="icon mdi mdi-check material-icons">check</i>
-                  <label>Select All</label>
+    <div class="accordion mt-4 my-2" id="accordionTable">
+    @foreach($sales as $c)
+      <div class="card z-depth-0 shadowrow mb-4" style="border-radius: 13px;" onclick="card({{$c->nota_id}})" id="{{ $c -> nota_id }}">
+        <div class="card-body headsale" id="heading{{ $c -> nota_id }}">
+          <div class="row align-items-center my-1" style="font-weight: 800;">
+              <div class="col-2">
+                <span class="align-middle">{{ $c -> nota_id }}</span>
+              </div>
+              <div class="col-2">
+                <span class="align-middle">{{ $c -> c_fullname }}</span>
+              </div>
+              <div class="col-2">
+                <span class="align-middle">{{ $c -> u_fullname }}</span>
+              </div>
+              <div class="col-2">
+                <span class="align-middle">{{ $c -> nota_date }}</span>
+              </div>
+              <div class="col-2">
+                <span class="align-middle price">{{ $c -> total_payment }}</span>
+              </div>
+
+              <div class="col-2 text-right">
+                <button class="btn btn-sm btn-success" type="button" data-toggle="collapse" data-target="#collapse{{ $c -> nota_id }}" aria-expanded="false" aria-controls="collapse{{ $c -> nota_id }}" onclick="change({{ $c -> nota_id }})" style="font-size: .1rem;display: inline-block;">
+                  <i class="material-icons arrow" id="icon{{$c->nota_id}}">keyboard_arrow_down</i>
+                </button>
               </div>
           </div>
-        </div>
-        @else
-        <div class="col-2">
-          #
-        </div>
-        @endif
-        <div class="col-2">
-          Nama Customer
-        </div>
-        <div class="col-2 pr-0">
-          Nama User
-        </div>
-        <div class="col-2 pl-0 pr-0">
-          Tanggal Penjualan
-        </div>
-        <div class="col-2 pl-0 pr-0">
-          Total Pembelian
-        </div>
-        <div class="col-1 pl-0">
-          Detail
-        </div>
-      </div>
-      <div class="accordion mt-4" id="accordionTable">
-      @foreach($sales as $c)
-          <div class="card z-depth-0 shadowrow mb-4" onclick="card({{ $c -> nota_id }})" id="{{ $c -> nota_id }}">
-            <div class="card-body bg-light" id="heading{{ $c -> nota_id }}">
-              <div class="row align-items-center my-1 pl-3">
-                @if(session('type') == 1)
-                <div class="col-1">
-                  <div class="pretty p-icon p-curve">
-                      <input type="checkbox" class="childcheck" id="check{{$c->nota_id}}"/>
-                      <div class="state">
-                          <i class="icon mdi mdi-check material-icons">check</i>
-                          <label></label>
-                      </div>
-                  </div>
-                </div>
-                @endif
-                <div class="col-2">
-                  <span class="align-middle">{{ $c -> nota_id }}</span>
-                </div>
-                <div class="col-2">
-                  <span class="align-middle">{{ $c -> c_fullname }}</span>
-                </div>
-                <div class="col-2">
-                  <span class="align-middle">{{ $c -> u_fullname }}</span>
-                </div>
-                <div class="col-2">
-                  <span class="align-middle">{{ $c -> nota_date }}</span>
-                </div>
-                <div class="col-2">
-                  <span class="align-middle price">{{ $c -> total_payment }}</span>
-                </div>
-                <div class="col-1">
-                  <button class="btn btn-sm btn-success" type="button" data-toggle="collapse" data-target="#collapse{{ $c -> nota_id }}" aria-expanded="false" aria-controls="collapse{{ $c -> nota_id }}" onclick="change({{ $c -> nota_id }})" style="font-size: .1rem;">
-                    <i class="material-icons" id="icon{{$c->nota_id}}">keyboard_arrow_down</i>
-                  </button>
-                </div>
-              </div>
-            
-            <div id="collapse{{ $c -> nota_id }}" class="collapse p-3 mt-4" aria-labelledby="heading{{ $c -> nota_id }}" data-parent="#accordionTable">
-              <div class="row">
-                <table class="table" width="80%">
+          
+          <div id="collapse{{ $c -> nota_id }}" class="collapse p-3 mt-4" aria-labelledby="heading{{ $c -> nota_id }}" data-parent="#accordionTable">
+            <div class="row">
+              <table class="table" width="80%">
                 <tr>
                   <th>ID</th>
                   <th>Nama Produk</th>
@@ -133,169 +143,96 @@
                   <th>Disc.</th>
                   <th>Total</th>
                 </tr>
-                
-                  @foreach($c->detail as $d)
-                  <tr>
-                    <td width="5%">{{ $d -> product_id }}</td>
-                    <td width="55%">{{ $d -> product_name }}</td>
-                    <td width="15%">
-                      <span class="price harga{{ $c -> nota_id }}">{{ $d -> selling_price }}</span>
-                    </td>
-                    <td width="5%">
-                      x<span class="quantity{{ $c -> nota_id }}">{{ $d -> quantity }}</span>
-                    </td>
-                    <td width="5%">
-                      <input type="hidden" value="{{$d->discount}}" id="" class="discount{{ $c -> nota_id }}">
-                      @if($d->discount != "0")
-                      <span style="color: #cc0000">
-                         <?php echo (($d->discount/($d->selling_price*$d->quantity))*100)."%"; ?>
-                      </span>
-                      @else
-                        -
-                      @endif
-                    </td>
-                    <td width="25%">
-                      <span class="price total_price">{{ $d -> total_price }}</span>
-                    </td>
-                  </tr>
-                  @endforeach
-                </table>  
-                </div>
-                <div class="row justify-content-end px-12 my-2">
-                  <div class="col-3 totals">Subtotal</div>
-                  <div class="col-2 price totals" id="subtotal{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
-                </div>
-                <div class="row justify-content-end px-12 my-2">
-                  <div class="col-3 totals">Total Diskon</div>
-                  <div class="col-2 price totals" id="total_discount{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
-                  </div>
-                <div class="row justify-content-end px-12 my-2">
-                  <div class="col-3 totals">Pajak(10%)</div>
-                  <div class="col-2 price totals" id="total_tax{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
-                  </div>
-                <div class="row justify-content-end px-12 my-2">
-                  <div class="col-3 total">Total Payment</div>
-                  <div class="col-2 price total" id="total_payment{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
-                </div>
-              </div>
-              </div>
-            
-          </div>
-        @endforeach
-    </div>
-    @if(session('type') == 1)
-    <div class="row pl-3">
-      <div class="col-1 mr-4">
-        <div class="pretty p-icon p-curve">
-            <input type="checkbox" id="parentB" />
-            <div class="state">
-                <i class="icon mdi mdi-check material-icons">check</i>
-                <label>Select All</label>
-            </div>
-        </div>
-      </div>
-      <div class="col-2">
-        <button class="btn btn-danger btn-icon-split btn-sm delete-confirm">
-          <span class="icon text-white-30">
-            <i class="material-icons">delete</i>
-          </span>
-          <span class="text">Delete</span>
-        </button>
-      </div>
-    </div>
-    @endif
-      <div class="row justify-content-end pr-3">
-    {{$sales->links()}}
-  </div>
-  </div>
-
-</div>
-<div class="card shadow mb-4">
-  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-      <h3 class="m-0 font-weight-bold text-primary">History Penjualan</h3>
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table display" id="dataTable1" width="100%" cellspacing="0">
-          <thead>
-              <th>ID</th>
-              <th>Nama Customer</th>
-              <th>Nama User</th>
-              <th>Tanggal Penjualan</th>
-              <th>Total Pembelian</th>
-              <th>Action</th>
-          </thead>
-          <tfoot>
-              <th>ID</th>
-              <th>Nama Customer</th>
-              <th>Nama User</th>
-              <th>Tanggal Penjualan</th>
-              <th>Total Pembelian</th>
-              <th>Action</th>
-          </tfoot>
-          <tbody>
-              @foreach($trash as $c)
-              <tr>
-                <div class="row">
-                  <td>{{ $c -> nota_id }}</td>
-                  <td>{{ $c -> c_fullname }}</td>
-                  <td>{{ $c -> u_fullname }}</td>
-                  <td>{{ $c -> nota_date }}</td>
-                  <td>{{ $c -> total_payment }}</td>
-                  <td>
-                    @if(session('type') == 1)
-                    @include('restorebtn', 
-                    array(
-                    'id' => $c -> nota_id,
-                    'dellink' => 'sale',
-                    'status' => $c -> status))
+              
+                @foreach($c->detail as $d)
+                <tr>
+                  <td width="5%">{{ $d -> product_id }}</td>
+                  <td width="55%">{{ $d -> product_name }}</td>
+                  <td width="15%">
+                    <span class="price harga{{ $c -> nota_id }}">{{ $d -> selling_price }}</span>
+                  </td>
+                  <td width="5%">
+                    x<span class="quantity{{ $c -> nota_id }}">{{ $d -> quantity }}</span>
+                  </td>
+                  <td width="5%">
+                    <input type="hidden" value="{{$d->discount}}" id="" class="discount{{ $c -> nota_id }}">
+                    @if($d->discount != "0")
+                    {{(($d->discount/($d->selling_price*$d->quantity))*100)}}%
+                    @else
+                      -
                     @endif
                   </td>
+                  <td width="25%">
+                    <span class="price total_price">{{ $d -> total_price }}</span>
+                  </td>
+                </tr>
+                @endforeach
+              </table>  
+            </div>
+
+            <div class="row justify-content-end my-2">
+              <div class="col-3 totals">Subtotal</div>
+              <div class="col-2 price totals" id="subtotal{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
+            </div>
+
+            <div class="row justify-content-end my-2">
+              <div class="col-3 totals">Total Diskon</div>
+              <div class="col-2 price totals totaldiskon" id="total_discount{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
+            </div>
+
+            <div class="row justify-content-end my-2">
+              <div class="col-3 totals">Pajak(10%)</div>
+              <div class="col-2 price totals" id="total_tax{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
+            </div>
+
+            <div class="row justify-content-end mt-2">
+              <div class="col-5 card-body totalcard">
+                <div class="row">
+                  <div class="col-5 total">Total Payment</div>
+                  <div class="col-7 price total total_payment" id="total_payment{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
                 </div>
-              </tr>
-              @endforeach
-          </tbody>
-        </table>
+              </div>
+            </div>
+
+          </div>
+        </div>  
       </div>
+    @endforeach
+    </div>
+    <div class="row justify-content-end pr-3">
+      {{$sales->links()}}
     </div>
   </div>
-  @if(session('deleted'))
-    <script>
-      Swal.fire(
-        'Delete Success!',
-        "Penjualan {{ @session('deleted') }} telah dihapus",
-        'success'
-      )
-    </script>
-  @endif
-  @if(session('inserted'))
-    <script>
-      Swal.fire(
-        'Insert Success!',
-        "Penjualan {{ @session('inserted') }} berhasil ditambahkan",
-        'success'
-      )
-    </script>
-  @endif
-  @if(session('edited'))
-    <script>
-      Swal.fire(
-        'Edit Success!',
-        "Data penjualan dengan ID {{ @session('edited') }} berhasil diubah",
-        'success'
-      )
-    </script>
-  @endif
-  @if(session('restored'))
-    <script>
-      Swal.fire(
-        'Restore Success!',
-        "Data penjualan dengan ID {{ @session('restored') }} berhasil dikembalikan",
-        'success'
-      )
-    </script>
-  @endif
+</div>
+@if(session('deleted'))
+  <script>
+    Swal.fire(
+      'Delete Success!',
+      "Penjualan {{ @session('deleted') }} telah dihapus",
+      'success'
+    )
+  </script>
+@endif
+@if(session('inserted'))
+  <script>
+    Swal.fire(
+      'Insert Success!',
+      "Penjualan {{ @session('inserted') }} berhasil ditambahkan",
+      'success'
+    )
+  </script>
+@endif
+@if(session('edited'))
+  <script>
+    Swal.fire(
+      'Edit Success!',
+      "Data penjualan dengan ID {{ @session('edited') }} berhasil diubah",
+      'success'
+    )
+  </script>
+@endif
 @endsection
+
 @section('bottom')
 <script src="{{ asset('/admin/vendor/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{ asset('/admin/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
@@ -304,14 +241,17 @@
   function change(id){
     console.log("rotatinggg");
     var icon = $("#icon"+id);
-    if(icon.html() == "keyboard_arrow_down"){
-      icon.html("keyboard_arrow_up");
-      console.log("berubaaaah");
+    $(".arrow").each(function(){
+        $(this).html("keyboard_arrow_down");
+    })
+    if($("#collapse"+id).css('display') == "block"){
+      icon.html("keyboard_arrow_down");
     }
     else{
-      icon.html("keyboard_arrow_down");
-      console.log("masuk else");
+      icon.html("keyboard_arrow_up");
     }
+
+
   }
   function card(id){
     if($('#check'+id).is(":checked")){
@@ -385,6 +325,11 @@
     $('.price').each(function(){
       $(this).html("Rp "+money($(this).html()));
     });
+
+    $(".totaldiskon").each(function(){
+      $(this).html("- "+$(this).html());
+    });
+
   });
   
 $('.delete-confirm').on('click', function (e) {
@@ -405,7 +350,7 @@ $('.delete-confirm').on('click', function (e) {
           var ids= new Array();
           $('.childcheck').each(function(){
             if($(this).is(":checked")){
-              ids[ids.length+1] = $(this).attr("id").substring(5,10);
+              ids[ids.length+1] = $(this).attr("id").substring(5,15);
             }
           });
           var flag = -1;
