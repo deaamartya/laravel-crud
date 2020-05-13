@@ -185,7 +185,10 @@
               <div class="col-2 price totals" id="total_tax{{ $c -> nota_id }}">{{ $c -> total_payment }}</div>
             </div>
 
-            <div class="row justify-content-end mt-2">
+            <div class="row justify-content-between mt-2">
+              <div class="col-2 align-self-start">
+                <a href="{{url('/sale/'.$c->nota_id)}}"><button class="btn btn-success"><i class="fas fa-eye mr-2"></i>Lihat Invoice</button></a>
+              </div>
               <div class="col-5 card-body totalcard">
                 <div class="row">
                   <div class="col-5 total">Total Payment</div>
@@ -193,6 +196,7 @@
                 </div>
               </div>
             </div>
+
 
           </div>
         </div>  

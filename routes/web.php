@@ -46,3 +46,4 @@ Route::post('/testAjax/getProduct','IndexController@getProduct');
 
 Route::get('/','UserController@login');
 Route::get('/sales/print-pdf','SaleController@printPDF');
+Route::get('/printinvoice/{id}','SaleController@printInvoice');

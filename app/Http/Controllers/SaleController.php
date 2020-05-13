@@ -367,10 +367,32 @@ class SaleController extends Controller
     }
 
     public function printPDF(){
-        $sales = Sale::orderBy('nota_date')->get();
-        return view('pdf_view',['sales' => $sales]);
-        // $pdf = PDF::loadView('pdf_view', ['sales' => $sales]);  
-        // return $pdf->stream();
+        $sales = Sale::select(DB::raw('CONCAT(customer.first_name," ",COALESCE(customer.last_name, "")) AS c_fullname'),(DB::raw('CONCAT(user.first_name," ",user.last_name) AS u_fullname')),'sales.*')
+            ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
+            ->join('user', 'user.user_id', '=', 'sales.user_id')
+            ->orderBy('nota_date')->get();
+        $product = SaleDetail::groupBy('product_id')
+        ->select('product.*',DB::raw('SUM(sales_detail.quantity) AS total_penjualan'))
+        ->join('product','product.product_id','=','sales_detail.product_id')->orderBy('total_penjualan', 'desc')
+        ->get();
+        //return view('pdf_view',['sales' => $sales]);
+        $pdf = PDF::loadView('pdf_view', ['sales' => $sales,'product' => $product])->setPaper('a4', 'landscape');  
+        return $pdf->stream("report.pdf");
+    }
+
+    public function printInvoice($id){
+        $sale = Sale::where('nota_id','=',$id)
+            ->select(DB::raw('CONCAT(customer.first_name," ",customer.last_name) AS c_name'),DB::raw('CONCAT(user.`first_name`," ",`user`.`last_name`) AS u_name'),'customer.street',DB::raw('CONCAT(customer.city,", ",customer.state," ",customer.zip_code) AS c_address'),'customer.phone','customer.email','user.phone AS u_phone','user.email AS u_email','nota_date','nota_id','total_payment')
+            ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
+            ->join('user', 'user.user_id', '=', 'sales.user_id')
+            ->first();
+        $saledetail = SaleDetail::where('nota_id','=',$id)
+            ->select('sales_detail.nota_id','sales_detail.product_id', 'product.product_name','sales_detail.quantity', 'sales_detail.selling_price', 'sales_detail.discount','sales_detail.total_price')
+            ->join('product', 'sales_detail.product_id', '=', 'product.product_id')
+            ->get();
+        $pdf = PDF::loadView('sale/pdf_invoice', ['sale' => $sale, 'saledetail' => $saledetail])->setPaper('a4', 'potrait');  
+        return $pdf->download("invoice.pdf");
+        //return view('sale/pdf_invoice', ['sale' => $sale, 'saledetail' => $saledetail]);
     }
     
 }
