@@ -376,7 +376,7 @@ class SaleController extends Controller
         ->join('product','product.product_id','=','sales_detail.product_id')->orderBy('total_penjualan', 'desc')
         ->get();
         //return view('pdf_view',['sales' => $sales]);
-        $pdf = PDF::loadView('pdf_view', ['sales' => $sales,'product' => $product])->setPaper('a4', 'landscape');  
+        $pdf = \PDF::loadView('pdf_view', ['sales' => $sales,'product' => $product])->setPaper('a4', 'landscape');  
         return $pdf->stream("report.pdf");
     }
 
@@ -390,9 +390,8 @@ class SaleController extends Controller
             ->select('sales_detail.nota_id','sales_detail.product_id', 'product.product_name','sales_detail.quantity', 'sales_detail.selling_price', 'sales_detail.discount','sales_detail.total_price')
             ->join('product', 'sales_detail.product_id', '=', 'product.product_id')
             ->get();
-        $pdf = PDF::loadView('sale/pdf_invoice', ['sale' => $sale, 'saledetail' => $saledetail])->setPaper('a4', 'potrait');  
-        return $pdf->download("invoice.pdf");
-        //return view('sale/pdf_invoice', ['sale' => $sale, 'saledetail' => $saledetail]);
+        $pdf = \PDF::loadView('sale/pdf_invoice', ['sale' => $sale, 'saledetail' => $saledetail])->setPaper('a4', 'landscape'); 
+        return $pdf->stream("invoice.pdf");
     }
     
 }
