@@ -244,7 +244,7 @@
     var earnings=[];
     var label=[];
     $.ajax({
-        url: baseurl+'/getEarning/'+$("#pilihTahun").val(),
+        url: baseurl+'/getEarning/2020',
         method: 'GET',
         success: function(data) {
           setData(data.earning,data.labels,"myAreaChart");
@@ -260,41 +260,6 @@
           label.push(month[i]["namabulan"]);
       buildLineChart(earnings,label,id);
     }
-
-    $("#pilihBulan").click(function(){
-      var month = $("#pilihBulan").val();
-      $.ajax({
-          url: baseurl+'/getEarningBulan/'+month,
-          method: 'GET',
-          success: function(data) {
-            setDataBulan(data.earning,data.labels,"myAreaChartBulan");
-          },
-          error: function(data){
-          }
-      });
-    });
-
-    var month = $("#pilihBulan").val();
-      $.ajax({
-        url: baseurl+'/getEarningBulan/'+month,
-        method: 'GET',
-        success: function(data) {
-          setDataBulan(data.earning,data.labels,"myAreaChartBulan");
-        },
-        error: function(data){
-        }
-      });
-
-    function setDataBulan(earning,month,id){
-      for(var i in earning)
-          earnings[i] = earning[i];
-      for(var i=0;i<4;i++){
-        label[i] = "Minggu ke-"+i;
-        //label.push(month[i]["DATE_FORMAT(nota_date,\"%b\")"]);
-      }
-      buildLineChart(earnings,label,id);
-    }
-
   </script>
   <script src="{{asset('/admin/js/demo/chart-area.js')}}"></script>
   <script src="{{asset('/admin/js/demo/chart-area-bulan.js')}}"></script>

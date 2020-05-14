@@ -12,7 +12,7 @@ div.dataTables_wrapper div.dataTables_filter input {
 @if(session('type') == 4)
   @section('btn-insert')
   <a href="{{ route('categories.create') }}">
-    <button class="btn btn-primary">Tambah Kategori</button>
+    <button class="btn btn-primary"><i class="fa fa-plus-circle mr-2"></i>Tambah Kategori</button>
   </a>
   @endsection
 @endif

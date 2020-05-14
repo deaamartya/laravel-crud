@@ -2,6 +2,7 @@
 @section('headlink')
 <link href="{{ asset('/admin/vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link href="{{ asset('/admin/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
 <style type="text/css">
   .btn-group-sm > .btn-icon-split.btn .icon, .btn-icon-split.btn-sm .icon {
     padding: 2px 5px;

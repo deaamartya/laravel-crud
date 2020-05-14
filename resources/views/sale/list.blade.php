@@ -6,6 +6,7 @@
 <link href="https://cdn.datatables.net/searchpanes/1.0.1/css/searchpanes.dataTables.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link href="{{ asset('/admin/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
   <style type="text/css">
     .btn-group-sm > .btn-icon-split.btn .icon, .btn-icon-split.btn-sm .icon {
       padding: 2px 5px;
@@ -79,7 +80,7 @@
     <h3 class="m-0 font-weight-bold text-primary">Data Penjualan</h3>
       @if(session('type') == 3)
         <a href="{{ route('sale.create') }}">
-          <button class="btn btn-primary">Tambah Penjualan</button>
+          <button class="btn btn-primary"><i class="fa fa-plus-circle mr-2"></i>Tambah Penjualan</button>
         </a>
       @endif
   </div>

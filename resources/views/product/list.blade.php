@@ -6,7 +6,7 @@
 @if(session('type') == 4)
 @section('btn-insert')
 <a href="{{ route('product.create') }}">
-  <button class="btn btn-primary">Tambah Produk</button>
+  <button class="btn btn-primary"><i class="fa fa-plus-circle mr-2"></i>Tambah Produk</button>
 </a>
 @endsection
 @endif
