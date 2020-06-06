@@ -40,6 +40,9 @@ Route::get('logout','UserController@logout');
 Route::post('login/verify','UserController@verify');
 
 Route::get('/home', 'IndexController@index');
+Route::get('/scan', function(){
+	return view('scan');
+});
 
 Route::get('/testAjax','IndexController@index');
 Route::post('/testAjax/getProduct','IndexController@getProduct');
