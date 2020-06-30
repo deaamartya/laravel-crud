@@ -4,7 +4,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link href="{{ asset('/admin/vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 @endsection
@@ -138,7 +137,7 @@
           <img class="card-img" src="{{ asset('/img/empty_cart.svg')}}" style="height: 500px;">
           <div class="card-img-overlay">
             <a href="#pilihanProduct" data-toggle="modal">
-              <img src="{{ asset('/img/add_btn.svg')}}" style="height: 40px;margin-top: 150px;margin-left: 240px;" class=" add-row"  >
+              <img src="{{ asset('/img/add_btn.svg')}}" style="height: 40px;margin-top: 150px;margin-left: 240px;" class=" add-row">
             </a>
           </div>
         </div>
@@ -201,7 +200,6 @@
 @section('bottom')
 <script src="{{ asset('/js/hitung.js')}}"></script>
 <script src="{{ asset('/js/add-del-row.js')}}"></script>
-<script src="{{ asset('/js/onkey.js')}}"></script>
 <script src="{{ asset('/admin/vendor/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{ asset('/admin/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
@@ -254,7 +252,6 @@
               ids[i] = checks[i].id;
               $("#"+ids[i]).prop("checked", false);
               ids[i] = ids[i].substring(5,15);
-              // console.log(ids[i]);
               if($("#cart #"+ids[i]).length){
                 inc(ids[i]);
               }
@@ -265,6 +262,12 @@
           $("#pilihanProduct").modal('hide');
         });
 
+        function checkperc(id){
+          if($("#percent"+id).val() > 100 || $("#percent"+id).val() < 0){
+            return false;
+          }
+        }
+
         $("#category_id").change(function(){
             var id = $('#category_id').find(":selected").val();
             var baseurl = '{{URL::to('')}}';
@@ -274,18 +277,8 @@
                 success: function(data) {
                   var table = $("#tabelproduk").DataTable();
                   var product = data.product;
-
-                  // var checks = document.getElementsByClassName("productcheck");
                   table.clear().draw();
                   for(var index=0;index<product.length;index++){
-                    
-                    // getCheck(product[index]["product_id"]);
-
-                    // var bool = false;
-
-                    // if($("#check"+product[index]["product_id"]).prop("checked") == true){
-                    //   bool = true;
-                    // }
                     
                     table.row.add(['<div class="pretty p-svg p-curve"><input type="checkbox" class="productcheck" id="check'+product[index]["product_id"]+'"/><div class="state p-success"><svg class="svg svg-icon" viewBox="0 0 20 20"><path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z" style="stroke: white;fill:white;"></path></svg><label></label></div></div>',
                         product[index]["category_name"],
@@ -294,8 +287,6 @@
                         product[index]["product_stock"]
                     ]).node().id = product[index]["product_id"];
                     table.draw();
-                    // console.log(product[index]);
-                    // $("#check"+product[index]["product_id"]).prop("checked", bool);
                   }
                   $('#tabelproduk >tbody tr').click(function() {
                       var check = $(this).find("input[type=checkbox]");

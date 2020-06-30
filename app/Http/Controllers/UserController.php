@@ -191,7 +191,7 @@ class UserController extends Controller
             return view('login');
         }
         else{
-            return redirect('/home')->with('alert','Kamu kan udah login:)');
+            return redirect('/home')->with('alert','Anda sudah login');
         }
     }
 
@@ -202,7 +202,7 @@ class UserController extends Controller
             return redirect('login')->with('logout',$name);
         }
         else{
-            return redirect('login')->with('alert','Kamu kan belum login:)');
+            return redirect('login')->with('alert','Anda belum login');
         }
     }
 

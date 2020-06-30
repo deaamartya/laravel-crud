@@ -1,7 +1,6 @@
 @extends('master')
 @section('Judul','Insert Penjualan')
 @section('headlink')
-
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -164,8 +163,6 @@
 
                         <input type="hidden" name="product_id[{{$id}}]" value={{$id}} readonly id="product_id{{$id}}">
 
-                        <input type="hidden" name="boh">
-
                         <div class="row py-3 px-4 row-cart align-items-center mb-3" id="{{$id}}">
                           <div class="col-5" style="text-align: left;">
                             <div class="row">
@@ -265,9 +262,6 @@
 @section('bottom')
 <script src="{{ asset('/js/hitung.js')}}"></script>
 <script src="{{ asset('/js/add-del-row.js')}}"></script>
-<script src="{{ asset('/js/onkey.js')}}"></script>
-<!-- <script src="{{ asset('/admin/vendor/datatables/jquery.dataTables.min.js')}}"></script> -->
-<!-- <script src="{{ asset('/admin/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
 <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>

@@ -36,11 +36,11 @@
       for (i = 0; i < jumlahs.length; ++i) {
         subtotal = subtotal + parseInt(jumlahs[i].value * prices[i].value);
         items = items + parseInt(jumlahs[i].value);
-        console.log("subtotal "+subtotal);
-        console.log("items "+items);
       }
 
-      $("#items").html('<i class="material-icons mr-2" style="vertical-align: bottom;">shopping_basket</i>'+items+" item");
+      $("#items").html('\
+        <i class="material-icons mr-2" style="vertical-align: bottom;">\
+          shopping_basket</i>'+items+" item");
 
       $('#subtotal').val(subtotal);
       $('#subtotal-val').html(money(subtotal));
@@ -56,9 +56,7 @@
       var total_disc = 0;
       for (i = 0; i < discounts.length; ++i) {
         total_disc = total_disc + parseInt(discounts[i].value);
-        console.log("total_disc = "+total_disc);
       }
-
 
       document.getElementById('total_discount').value = total_disc;
       document.getElementById('total_discount-val').innerHTML = money(total_disc);

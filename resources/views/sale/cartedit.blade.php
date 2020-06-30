@@ -263,12 +263,10 @@
         var products = <?php echo json_encode($product); ?>;
         var categories = <?php echo json_encode($categories); ?>;
         var saledetails = new Array(<?php echo json_encode($saledetails); ?>);
-        console.log("atas iki wah");
         var prices = document.getElementsByClassName("productprice");
         for (var i = 0; i < prices.length; ++i) {
           prices[i].innerHTML = money(prices[i].innerHTML);
         }
-        console.log("cbcb");
         $('#keranjang').show();
         $('#kosong').hide();
         $('#tabelproduk').dataTable({

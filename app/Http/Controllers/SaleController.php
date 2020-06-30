@@ -15,13 +15,7 @@ use PDF;
 
 class SaleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
+    public function index(){
         if(Session::get('login') && ((Session('type') == 3 || Session('type') == 2) || (Session('type') == 1))){
             $sales = Sale::select(DB::raw('CONCAT(customer.first_name," ",COALESCE(customer.last_name, "")) AS c_fullname'),(DB::raw('CONCAT(user.first_name," ",user.last_name) AS u_fullname')),'sales.*')
                 ->join('customer', 'customer.customer_id', '=', 'sales.customer_id')
@@ -42,15 +36,9 @@ class SaleController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
         if(Session::get('login') && (Session('type') == 3)){
-
             $saledetails = $request->session()->get('saledetails');
             $product = Product::select('product.*','categories.category_name')
                 ->join('categories','product.category_id','=','categories.category_id')
@@ -73,7 +61,11 @@ class SaleController extends Controller
 
             $user_id = Session::get('user_id');
 
-            return view('/sale/cart',compact('saledetails'),['product' => $product,'nota_id' => $nota_id,'user_id'=>$user_id,'categories'=>$categories]);
+            return view('/sale/cart',compact('saledetails'),[
+                'product' => $product,
+                'nota_id' => $nota_id,
+                'user_id'=>$user_id,
+                'categories'=>$categories]);
         }
         else{
             return redirect('/')->with('alert','Anda tidak memiliki akses ke halaman');
